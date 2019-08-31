@@ -26,10 +26,15 @@ namespace HostComputer
             Bitmap GrayImage = IDF.RGBToGray(OImage);
             DealedImage1PB.Image = GrayImage;
 
-            Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, 20);
+            Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, 80);
             DealedImage2PB.Image = BinaryImage;
         }
 
         public ImageDealFlow IDF = new ImageDealFlow();
+
+        private void skinTrackBar1_Scroll(object sender, EventArgs e)
+        {
+            BinaryThresholdShowTB.Text = BinaryThresholdTrackBar.Value.ToString();
+        }
     }
 }

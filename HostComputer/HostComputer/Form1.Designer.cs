@@ -42,6 +42,8 @@
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
             this.skinButton1 = new CCWin.SkinControl.SkinButton();
+            this.BinaryThresholdTrackBar = new CCWin.SkinControl.SkinTrackBar();
+            this.BinaryThresholdShowTB = new CCWin.SkinControl.SkinTextBox();
             this.skinMenuStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
@@ -50,6 +52,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // skinMenuStrip1
@@ -231,6 +234,8 @@
             // skinTabPage1
             // 
             this.skinTabPage1.BackColor = System.Drawing.Color.White;
+            this.skinTabPage1.Controls.Add(this.BinaryThresholdShowTB);
+            this.skinTabPage1.Controls.Add(this.BinaryThresholdTrackBar);
             this.skinTabPage1.Controls.Add(this.skinButton1);
             this.skinTabPage1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.skinTabPage1.Location = new System.Drawing.Point(0, 36);
@@ -274,7 +279,7 @@
             this.skinButton1.BackColor = System.Drawing.Color.Transparent;
             this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.skinButton1.DownBack = null;
-            this.skinButton1.Location = new System.Drawing.Point(192, 135);
+            this.skinButton1.Location = new System.Drawing.Point(165, 68);
             this.skinButton1.MouseBack = null;
             this.skinButton1.Name = "skinButton1";
             this.skinButton1.NormlBack = null;
@@ -283,6 +288,65 @@
             this.skinButton1.Text = "测试";
             this.skinButton1.UseVisualStyleBackColor = false;
             this.skinButton1.Click += new System.EventHandler(this.skinButton1_Click);
+            // 
+            // BinaryThresholdTrackBar
+            // 
+            this.BinaryThresholdTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.BinaryThresholdTrackBar.Bar = null;
+            this.BinaryThresholdTrackBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Opacity;
+            this.BinaryThresholdTrackBar.BaseColor = System.Drawing.Color.Black;
+            this.BinaryThresholdTrackBar.Location = new System.Drawing.Point(3, 175);
+            this.BinaryThresholdTrackBar.Maximum = 255;
+            this.BinaryThresholdTrackBar.Name = "BinaryThresholdTrackBar";
+            this.BinaryThresholdTrackBar.Size = new System.Drawing.Size(337, 56);
+            this.BinaryThresholdTrackBar.TabIndex = 1;
+            this.BinaryThresholdTrackBar.Track = null;
+            this.BinaryThresholdTrackBar.Scroll += new System.EventHandler(this.skinTrackBar1_Scroll);
+            // 
+            // BinaryThresholdShowTB
+            // 
+            this.BinaryThresholdShowTB.BackColor = System.Drawing.Color.Transparent;
+            this.BinaryThresholdShowTB.DownBack = null;
+            this.BinaryThresholdShowTB.Icon = null;
+            this.BinaryThresholdShowTB.IconIsButton = false;
+            this.BinaryThresholdShowTB.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BinaryThresholdShowTB.IsPasswordChat = '\0';
+            this.BinaryThresholdShowTB.IsSystemPasswordChar = false;
+            this.BinaryThresholdShowTB.Lines = new string[] {
+        "0"};
+            this.BinaryThresholdShowTB.Location = new System.Drawing.Point(343, 190);
+            this.BinaryThresholdShowTB.Margin = new System.Windows.Forms.Padding(0);
+            this.BinaryThresholdShowTB.MaxLength = 32767;
+            this.BinaryThresholdShowTB.MinimumSize = new System.Drawing.Size(28, 28);
+            this.BinaryThresholdShowTB.MouseBack = null;
+            this.BinaryThresholdShowTB.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BinaryThresholdShowTB.Multiline = false;
+            this.BinaryThresholdShowTB.Name = "BinaryThresholdShowTB";
+            this.BinaryThresholdShowTB.NormlBack = null;
+            this.BinaryThresholdShowTB.Padding = new System.Windows.Forms.Padding(5);
+            this.BinaryThresholdShowTB.ReadOnly = true;
+            this.BinaryThresholdShowTB.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.BinaryThresholdShowTB.Size = new System.Drawing.Size(37, 28);
+            // 
+            // 
+            // 
+            this.BinaryThresholdShowTB.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.BinaryThresholdShowTB.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BinaryThresholdShowTB.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 9.75F);
+            this.BinaryThresholdShowTB.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.BinaryThresholdShowTB.SkinTxt.Name = "BaseText";
+            this.BinaryThresholdShowTB.SkinTxt.ReadOnly = true;
+            this.BinaryThresholdShowTB.SkinTxt.Size = new System.Drawing.Size(27, 22);
+            this.BinaryThresholdShowTB.SkinTxt.TabIndex = 0;
+            this.BinaryThresholdShowTB.SkinTxt.Text = "0";
+            this.BinaryThresholdShowTB.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BinaryThresholdShowTB.SkinTxt.WaterText = "";
+            this.BinaryThresholdShowTB.TabIndex = 2;
+            this.BinaryThresholdShowTB.Text = "0";
+            this.BinaryThresholdShowTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.BinaryThresholdShowTB.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BinaryThresholdShowTB.WaterText = "";
+            this.BinaryThresholdShowTB.WordWrap = true;
             // 
             // HostComputerForm
             // 
@@ -304,9 +368,11 @@
             this.ImagePreDealTP.ResumeLayout(false);
             this.Pre_MethodTabControl.ResumeLayout(false);
             this.skinTabPage1.ResumeLayout(false);
+            this.skinTabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -326,6 +392,8 @@
         private CCWin.SkinControl.SkinTabControl Pre_MethodTabControl;
         private CCWin.SkinControl.SkinTabPage skinTabPage1;
         private CCWin.SkinControl.SkinButton skinButton1;
+        private CCWin.SkinControl.SkinTrackBar BinaryThresholdTrackBar;
+        private CCWin.SkinControl.SkinTextBox BinaryThresholdShowTB;
     }
 }
 
