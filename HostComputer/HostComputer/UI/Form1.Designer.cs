@@ -508,6 +508,7 @@
             this.SendClearBTN.TabIndex = 6;
             this.SendClearBTN.Text = "清除";
             this.SendClearBTN.UseVisualStyleBackColor = false;
+            this.SendClearBTN.Click += new System.EventHandler(this.SendClearBTN_Click_1);
             // 
             // SendBTN
             // 
@@ -524,6 +525,7 @@
             this.SendBTN.TabIndex = 5;
             this.SendBTN.Text = "发送";
             this.SendBTN.UseVisualStyleBackColor = false;
+            this.SendBTN.Click += new System.EventHandler(this.SendBTN_Click_1);
             // 
             // ReceiveGB
             // 
@@ -591,6 +593,7 @@
             this.ReceiveClearBTN.TabIndex = 3;
             this.ReceiveClearBTN.Text = "清除数据";
             this.ReceiveClearBTN.UseVisualStyleBackColor = false;
+            this.ReceiveClearBTN.Click += new System.EventHandler(this.ReceiveClearBTN_Click_1);
             // 
             // SaveDataBTN
             // 
@@ -623,6 +626,7 @@
             this.SwitchReceiveBTN.TabIndex = 1;
             this.SwitchReceiveBTN.Text = "开始接收";
             this.SwitchReceiveBTN.UseVisualStyleBackColor = false;
+            this.SwitchReceiveBTN.Click += new System.EventHandler(this.SwitchReceiveBTN_Click_1);
             // 
             // skinTabPage2
             // 
@@ -649,6 +653,7 @@
             this.MaximizeBox = false;
             this.Name = "HostComputerForm";
             this.Text = "调试用上位机 by上海海事大学";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.HostComputerForm_FormClosed);
             this.Load += new System.EventHandler(this.HostComputerForm_Load);
             this.skinMenuStrip1.ResumeLayout(false);
             this.skinMenuStrip1.PerformLayout();

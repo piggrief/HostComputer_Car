@@ -59,6 +59,7 @@ namespace UartComunication
                     catch (Exception ex)
                     {
                         MessageBox.Show("错误：" + ex.Message, "C#串口通信");
+                        return false;
                     }
                 }
                 else
