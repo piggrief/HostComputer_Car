@@ -52,9 +52,22 @@
             this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
+            this.SendGB = new CCWin.SkinControl.SkinGroupBox();
+            this.SendTB = new System.Windows.Forms.TextBox();
+            this.HexSendCB = new CCWin.SkinControl.SkinCheckBox();
+            this.SendClearBTN = new CCWin.SkinControl.SkinButton();
+            this.SendBTN = new CCWin.SkinControl.SkinButton();
+            this.ReceiveGB = new CCWin.SkinControl.SkinGroupBox();
+            this.ReceiveTB = new System.Windows.Forms.TextBox();
+            this.HexCB = new CCWin.SkinControl.SkinCheckBox();
+            this.ReceiveClearBTN = new CCWin.SkinControl.SkinButton();
+            this.SaveDataBTN = new CCWin.SkinControl.SkinButton();
+            this.SwitchReceiveBTN = new CCWin.SkinControl.SkinButton();
+            this.skinTabPage2 = new CCWin.SkinControl.SkinTabPage();
             this.skinMenuStrip1.SuspendLayout();
             this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
+            this.UART_TabPage.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
             this.Pre_MethodTabControl.SuspendLayout();
             this.skinTabPage1.SuspendLayout();
@@ -62,6 +75,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).BeginInit();
+            this.SendGB.SuspendLayout();
+            this.ReceiveGB.SuspendLayout();
             this.SuspendLayout();
             // 
             // skinMenuStrip1
@@ -122,7 +137,7 @@
             // UARTConfigMenuItem
             // 
             this.UARTConfigMenuItem.Name = "UARTConfigMenuItem";
-            this.UARTConfigMenuItem.Size = new System.Drawing.Size(144, 26);
+            this.UARTConfigMenuItem.Size = new System.Drawing.Size(181, 26);
             this.UARTConfigMenuItem.Text = "串口配置";
             this.UARTConfigMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
@@ -214,6 +229,7 @@
             this.skinTabControl1.CloseRect = new System.Drawing.Rectangle(2, 2, 12, 12);
             this.skinTabControl1.Controls.Add(this.UART_TabPage);
             this.skinTabControl1.Controls.Add(this.ImagePreDealTP);
+            this.skinTabControl1.Controls.Add(this.skinTabPage2);
             this.skinTabControl1.HeadBack = null;
             this.skinTabControl1.ImgTxtOffset = new System.Drawing.Point(0, 0);
             this.skinTabControl1.ItemSize = new System.Drawing.Size(70, 36);
@@ -227,7 +243,7 @@
             this.skinTabControl1.PageHover = ((System.Drawing.Image)(resources.GetObject("skinTabControl1.PageHover")));
             this.skinTabControl1.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
             this.skinTabControl1.PageNorml = null;
-            this.skinTabControl1.SelectedIndex = 1;
+            this.skinTabControl1.SelectedIndex = 0;
             this.skinTabControl1.Size = new System.Drawing.Size(1005, 623);
             this.skinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.skinTabControl1.TabIndex = 2;
@@ -235,6 +251,8 @@
             // UART_TabPage
             // 
             this.UART_TabPage.BackColor = System.Drawing.Color.White;
+            this.UART_TabPage.Controls.Add(this.SendGB);
+            this.UART_TabPage.Controls.Add(this.ReceiveGB);
             this.UART_TabPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.UART_TabPage.Location = new System.Drawing.Point(0, 36);
             this.UART_TabPage.Name = "UART_TabPage";
@@ -425,6 +443,198 @@
             this.InitalImagePB.TabIndex = 0;
             this.InitalImagePB.TabStop = false;
             // 
+            // SendGB
+            // 
+            this.SendGB.BackColor = System.Drawing.Color.Transparent;
+            this.SendGB.BorderColor = System.Drawing.Color.SteelBlue;
+            this.SendGB.Controls.Add(this.SendTB);
+            this.SendGB.Controls.Add(this.HexSendCB);
+            this.SendGB.Controls.Add(this.SendClearBTN);
+            this.SendGB.Controls.Add(this.SendBTN);
+            this.SendGB.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.SendGB.ForeColor = System.Drawing.Color.Black;
+            this.SendGB.Location = new System.Drawing.Point(9, 419);
+            this.SendGB.Name = "SendGB";
+            this.SendGB.RectBackColor = System.Drawing.Color.White;
+            this.SendGB.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.SendGB.Size = new System.Drawing.Size(983, 165);
+            this.SendGB.TabIndex = 3;
+            this.SendGB.TabStop = false;
+            this.SendGB.Text = "发送助手";
+            this.SendGB.TitleBorderColor = System.Drawing.Color.Transparent;
+            this.SendGB.TitleRectBackColor = System.Drawing.Color.White;
+            this.SendGB.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.SendGB.Enter += new System.EventHandler(this.SendGB_Enter);
+            // 
+            // SendTB
+            // 
+            this.SendTB.Location = new System.Drawing.Point(6, 32);
+            this.SendTB.Multiline = true;
+            this.SendTB.Name = "SendTB";
+            this.SendTB.Size = new System.Drawing.Size(820, 115);
+            this.SendTB.TabIndex = 7;
+            // 
+            // HexSendCB
+            // 
+            this.HexSendCB.AutoSize = true;
+            this.HexSendCB.BackColor = System.Drawing.Color.Transparent;
+            this.HexSendCB.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.HexSendCB.DownBack = null;
+            this.HexSendCB.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.HexSendCB.Location = new System.Drawing.Point(841, 36);
+            this.HexSendCB.MouseBack = null;
+            this.HexSendCB.Name = "HexSendCB";
+            this.HexSendCB.NormlBack = null;
+            this.HexSendCB.SelectedDownBack = null;
+            this.HexSendCB.SelectedMouseBack = null;
+            this.HexSendCB.SelectedNormlBack = null;
+            this.HexSendCB.Size = new System.Drawing.Size(127, 29);
+            this.HexSendCB.TabIndex = 5;
+            this.HexSendCB.Text = "以Hex发送";
+            this.HexSendCB.UseVisualStyleBackColor = false;
+            // 
+            // SendClearBTN
+            // 
+            this.SendClearBTN.BackColor = System.Drawing.Color.Transparent;
+            this.SendClearBTN.BaseColor = System.Drawing.Color.Silver;
+            this.SendClearBTN.BorderColor = System.Drawing.Color.Transparent;
+            this.SendClearBTN.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.SendClearBTN.DownBack = null;
+            this.SendClearBTN.Location = new System.Drawing.Point(841, 71);
+            this.SendClearBTN.MouseBack = null;
+            this.SendClearBTN.Name = "SendClearBTN";
+            this.SendClearBTN.NormlBack = null;
+            this.SendClearBTN.Size = new System.Drawing.Size(124, 36);
+            this.SendClearBTN.TabIndex = 6;
+            this.SendClearBTN.Text = "清除";
+            this.SendClearBTN.UseVisualStyleBackColor = false;
+            // 
+            // SendBTN
+            // 
+            this.SendBTN.BackColor = System.Drawing.Color.Transparent;
+            this.SendBTN.BaseColor = System.Drawing.Color.Silver;
+            this.SendBTN.BorderColor = System.Drawing.Color.Transparent;
+            this.SendBTN.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.SendBTN.DownBack = null;
+            this.SendBTN.Location = new System.Drawing.Point(841, 113);
+            this.SendBTN.MouseBack = null;
+            this.SendBTN.Name = "SendBTN";
+            this.SendBTN.NormlBack = null;
+            this.SendBTN.Size = new System.Drawing.Size(124, 36);
+            this.SendBTN.TabIndex = 5;
+            this.SendBTN.Text = "发送";
+            this.SendBTN.UseVisualStyleBackColor = false;
+            // 
+            // ReceiveGB
+            // 
+            this.ReceiveGB.BackColor = System.Drawing.Color.Transparent;
+            this.ReceiveGB.BorderColor = System.Drawing.Color.SteelBlue;
+            this.ReceiveGB.Controls.Add(this.ReceiveTB);
+            this.ReceiveGB.Controls.Add(this.HexCB);
+            this.ReceiveGB.Controls.Add(this.ReceiveClearBTN);
+            this.ReceiveGB.Controls.Add(this.SaveDataBTN);
+            this.ReceiveGB.Controls.Add(this.SwitchReceiveBTN);
+            this.ReceiveGB.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ReceiveGB.ForeColor = System.Drawing.Color.Black;
+            this.ReceiveGB.Location = new System.Drawing.Point(9, 14);
+            this.ReceiveGB.Name = "ReceiveGB";
+            this.ReceiveGB.RectBackColor = System.Drawing.Color.White;
+            this.ReceiveGB.RoundStyle = CCWin.SkinClass.RoundStyle.All;
+            this.ReceiveGB.Size = new System.Drawing.Size(983, 399);
+            this.ReceiveGB.TabIndex = 2;
+            this.ReceiveGB.TabStop = false;
+            this.ReceiveGB.Text = "接收助手";
+            this.ReceiveGB.TitleBorderColor = System.Drawing.Color.Transparent;
+            this.ReceiveGB.TitleRectBackColor = System.Drawing.Color.White;
+            this.ReceiveGB.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // ReceiveTB
+            // 
+            this.ReceiveTB.Location = new System.Drawing.Point(6, 33);
+            this.ReceiveTB.Multiline = true;
+            this.ReceiveTB.Name = "ReceiveTB";
+            this.ReceiveTB.ReadOnly = true;
+            this.ReceiveTB.Size = new System.Drawing.Size(820, 348);
+            this.ReceiveTB.TabIndex = 5;
+            // 
+            // HexCB
+            // 
+            this.HexCB.AutoSize = true;
+            this.HexCB.BackColor = System.Drawing.Color.Transparent;
+            this.HexCB.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.HexCB.DownBack = null;
+            this.HexCB.Font = new System.Drawing.Font("微软雅黑", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.HexCB.Location = new System.Drawing.Point(838, 226);
+            this.HexCB.MouseBack = null;
+            this.HexCB.Name = "HexCB";
+            this.HexCB.NormlBack = null;
+            this.HexCB.SelectedDownBack = null;
+            this.HexCB.SelectedMouseBack = null;
+            this.HexCB.SelectedNormlBack = null;
+            this.HexCB.Size = new System.Drawing.Size(127, 29);
+            this.HexCB.TabIndex = 4;
+            this.HexCB.Text = "以Hex显示";
+            this.HexCB.UseVisualStyleBackColor = false;
+            // 
+            // ReceiveClearBTN
+            // 
+            this.ReceiveClearBTN.BackColor = System.Drawing.Color.Transparent;
+            this.ReceiveClearBTN.BaseColor = System.Drawing.Color.Silver;
+            this.ReceiveClearBTN.BorderColor = System.Drawing.Color.Transparent;
+            this.ReceiveClearBTN.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.ReceiveClearBTN.DownBack = null;
+            this.ReceiveClearBTN.Location = new System.Drawing.Point(841, 345);
+            this.ReceiveClearBTN.MouseBack = null;
+            this.ReceiveClearBTN.Name = "ReceiveClearBTN";
+            this.ReceiveClearBTN.NormlBack = null;
+            this.ReceiveClearBTN.Size = new System.Drawing.Size(124, 36);
+            this.ReceiveClearBTN.TabIndex = 3;
+            this.ReceiveClearBTN.Text = "清除数据";
+            this.ReceiveClearBTN.UseVisualStyleBackColor = false;
+            // 
+            // SaveDataBTN
+            // 
+            this.SaveDataBTN.BackColor = System.Drawing.Color.Transparent;
+            this.SaveDataBTN.BaseColor = System.Drawing.Color.Silver;
+            this.SaveDataBTN.BorderColor = System.Drawing.Color.Transparent;
+            this.SaveDataBTN.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.SaveDataBTN.DownBack = null;
+            this.SaveDataBTN.Location = new System.Drawing.Point(841, 303);
+            this.SaveDataBTN.MouseBack = null;
+            this.SaveDataBTN.Name = "SaveDataBTN";
+            this.SaveDataBTN.NormlBack = null;
+            this.SaveDataBTN.Size = new System.Drawing.Size(124, 36);
+            this.SaveDataBTN.TabIndex = 2;
+            this.SaveDataBTN.Text = "保存数据";
+            this.SaveDataBTN.UseVisualStyleBackColor = false;
+            // 
+            // SwitchReceiveBTN
+            // 
+            this.SwitchReceiveBTN.BackColor = System.Drawing.Color.Transparent;
+            this.SwitchReceiveBTN.BaseColor = System.Drawing.Color.Silver;
+            this.SwitchReceiveBTN.BorderColor = System.Drawing.Color.Transparent;
+            this.SwitchReceiveBTN.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.SwitchReceiveBTN.DownBack = null;
+            this.SwitchReceiveBTN.Location = new System.Drawing.Point(841, 261);
+            this.SwitchReceiveBTN.MouseBack = null;
+            this.SwitchReceiveBTN.Name = "SwitchReceiveBTN";
+            this.SwitchReceiveBTN.NormlBack = null;
+            this.SwitchReceiveBTN.Size = new System.Drawing.Size(124, 36);
+            this.SwitchReceiveBTN.TabIndex = 1;
+            this.SwitchReceiveBTN.Text = "开始接收";
+            this.SwitchReceiveBTN.UseVisualStyleBackColor = false;
+            // 
+            // skinTabPage2
+            // 
+            this.skinTabPage2.BackColor = System.Drawing.Color.White;
+            this.skinTabPage2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skinTabPage2.Location = new System.Drawing.Point(0, 36);
+            this.skinTabPage2.Name = "skinTabPage2";
+            this.skinTabPage2.Size = new System.Drawing.Size(1005, 587);
+            this.skinTabPage2.TabIndex = 2;
+            this.skinTabPage2.TabItemImage = null;
+            this.skinTabPage2.Text = "参数调节";
+            // 
             // HostComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -445,6 +655,7 @@
             this.skinToolStrip1.ResumeLayout(false);
             this.skinToolStrip1.PerformLayout();
             this.skinTabControl1.ResumeLayout(false);
+            this.UART_TabPage.ResumeLayout(false);
             this.ImagePreDealTP.ResumeLayout(false);
             this.Pre_MethodTabControl.ResumeLayout(false);
             this.skinTabPage1.ResumeLayout(false);
@@ -453,6 +664,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).EndInit();
+            this.SendGB.ResumeLayout(false);
+            this.SendGB.PerformLayout();
+            this.ReceiveGB.ResumeLayout(false);
+            this.ReceiveGB.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -482,6 +697,18 @@
         public System.Windows.Forms.ToolStripLabel toolStripLabel3;
         public System.Windows.Forms.ToolStripLabel toolStripLabel4;
         public System.Windows.Forms.ToolStripLabel toolStripLabel5;
+        private CCWin.SkinControl.SkinGroupBox SendGB;
+        public System.Windows.Forms.TextBox SendTB;
+        private CCWin.SkinControl.SkinCheckBox HexSendCB;
+        private CCWin.SkinControl.SkinButton SendClearBTN;
+        private CCWin.SkinControl.SkinButton SendBTN;
+        private CCWin.SkinControl.SkinGroupBox ReceiveGB;
+        private System.Windows.Forms.TextBox ReceiveTB;
+        private CCWin.SkinControl.SkinCheckBox HexCB;
+        private CCWin.SkinControl.SkinButton ReceiveClearBTN;
+        private CCWin.SkinControl.SkinButton SaveDataBTN;
+        private CCWin.SkinControl.SkinButton SwitchReceiveBTN;
+        private CCWin.SkinControl.SkinTabPage skinTabPage2;
     }
 }
 

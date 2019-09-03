@@ -63,5 +63,30 @@ namespace HostComputer
             UARTConfig UARTConfigForm = new UARTConfig(this);
             UARTConfigForm.Show();
         }
+
+        private void SendClearBTN_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SendBTN_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ReceiveClearBTN_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SwitchReceiveBTN_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SendGB_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }
