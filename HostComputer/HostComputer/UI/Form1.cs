@@ -60,7 +60,7 @@ namespace HostComputer
         /// </summary>
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            UARTConfig UARTConfigForm = new UARTConfig(UsedUart);
+            UARTConfig UARTConfigForm = new UARTConfig(this);
             UARTConfigForm.Show();
         }
     }

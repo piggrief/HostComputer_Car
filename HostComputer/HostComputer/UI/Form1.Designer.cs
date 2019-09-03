@@ -34,6 +34,11 @@
             this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UARTConfigMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinToolStrip1 = new CCWin.SkinControl.SkinToolStrip();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.skinTabControl1 = new CCWin.SkinControl.SkinTabControl();
             this.UART_TabPage = new CCWin.SkinControl.SkinTabPage();
             this.ImagePreDealTP = new CCWin.SkinControl.SkinTabPage();
@@ -48,6 +53,7 @@
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
             this.skinMenuStrip1.SuspendLayout();
+            this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
             this.Pre_MethodTabControl.SuspendLayout();
@@ -116,7 +122,7 @@
             // UARTConfigMenuItem
             // 
             this.UARTConfigMenuItem.Name = "UARTConfigMenuItem";
-            this.UARTConfigMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.UARTConfigMenuItem.Size = new System.Drawing.Size(144, 26);
             this.UARTConfigMenuItem.Text = "串口配置";
             this.UARTConfigMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
@@ -158,6 +164,12 @@
             this.skinToolStrip1.ItemPressed = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.skinToolStrip1.ItemRadius = 4;
             this.skinToolStrip1.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            this.skinToolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripLabel1,
+            this.toolStripLabel2,
+            this.toolStripLabel3,
+            this.toolStripLabel4,
+            this.toolStripLabel5});
             this.skinToolStrip1.Location = new System.Drawing.Point(4, 691);
             this.skinToolStrip1.Name = "skinToolStrip1";
             this.skinToolStrip1.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
@@ -169,6 +181,32 @@
             this.skinToolStrip1.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
             this.skinToolStrip1.TitleRadius = 4;
             this.skinToolStrip1.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(84, 22);
+            this.toolStripLabel1.Text = "未配置串口";
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(0, 22);
+            // 
+            // toolStripLabel3
+            // 
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(0, 22);
+            // 
+            // toolStripLabel4
+            // 
+            this.toolStripLabel4.Name = "toolStripLabel4";
+            this.toolStripLabel4.Size = new System.Drawing.Size(0, 22);
+            // 
+            // toolStripLabel5
+            // 
+            this.toolStripLabel5.Name = "toolStripLabel5";
+            this.toolStripLabel5.Size = new System.Drawing.Size(0, 22);
             // 
             // skinTabControl1
             // 
@@ -404,6 +442,8 @@
             this.Load += new System.EventHandler(this.HostComputerForm_Load);
             this.skinMenuStrip1.ResumeLayout(false);
             this.skinMenuStrip1.PerformLayout();
+            this.skinToolStrip1.ResumeLayout(false);
+            this.skinToolStrip1.PerformLayout();
             this.skinTabControl1.ResumeLayout(false);
             this.ImagePreDealTP.ResumeLayout(false);
             this.Pre_MethodTabControl.ResumeLayout(false);
@@ -437,6 +477,11 @@
         private CCWin.SkinControl.SkinLabel skinLabel1;
         private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem UARTConfigMenuItem;
+        public System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        public System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        public System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        public System.Windows.Forms.ToolStripLabel toolStripLabel4;
+        public System.Windows.Forms.ToolStripLabel toolStripLabel5;
     }
 }
 
