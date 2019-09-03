@@ -31,28 +31,31 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostComputerForm));
             this.skinMenuStrip1 = new CCWin.SkinControl.SkinMenuStrip();
-            this.端口号ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinToolStrip1 = new CCWin.SkinControl.SkinToolStrip();
             this.skinTabControl1 = new CCWin.SkinControl.SkinTabControl();
             this.UART_TabPage = new CCWin.SkinControl.SkinTabPage();
             this.ImagePreDealTP = new CCWin.SkinControl.SkinTabPage();
             this.Pre_MethodTabControl = new CCWin.SkinControl.SkinTabControl();
             this.skinTabPage1 = new CCWin.SkinControl.SkinTabPage();
+            this.BinaryMethodSelectCB = new CCWin.SkinControl.SkinComboBox();
+            this.skinLabel1 = new CCWin.SkinControl.SkinLabel();
+            this.BinaryThresholdShowTB = new CCWin.SkinControl.SkinTextBox();
+            this.BinaryThresholdTrackBar = new CCWin.SkinControl.SkinTrackBar();
+            this.skinButton1 = new CCWin.SkinControl.SkinButton();
             this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
-            this.skinButton1 = new CCWin.SkinControl.SkinButton();
-            this.BinaryThresholdTrackBar = new CCWin.SkinControl.SkinTrackBar();
-            this.BinaryThresholdShowTB = new CCWin.SkinControl.SkinTextBox();
+            this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.skinMenuStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
             this.Pre_MethodTabControl.SuspendLayout();
             this.skinTabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // skinMenuStrip1
@@ -89,7 +92,7 @@
             this.skinMenuStrip1.ItemRadius = 4;
             this.skinMenuStrip1.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             this.skinMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.端口号ToolStripMenuItem});
+            this.工具ToolStripMenuItem});
             this.skinMenuStrip1.Location = new System.Drawing.Point(4, 32);
             this.skinMenuStrip1.Name = "skinMenuStrip1";
             this.skinMenuStrip1.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
@@ -101,12 +104,6 @@
             this.skinMenuStrip1.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
             this.skinMenuStrip1.TitleRadius = 4;
             this.skinMenuStrip1.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            // 
-            // 端口号ToolStripMenuItem
-            // 
-            this.端口号ToolStripMenuItem.Name = "端口号ToolStripMenuItem";
-            this.端口号ToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
-            this.端口号ToolStripMenuItem.Text = "端口号";
             // 
             // skinToolStrip1
             // 
@@ -234,6 +231,8 @@
             // skinTabPage1
             // 
             this.skinTabPage1.BackColor = System.Drawing.Color.White;
+            this.skinTabPage1.Controls.Add(this.BinaryMethodSelectCB);
+            this.skinTabPage1.Controls.Add(this.skinLabel1);
             this.skinTabPage1.Controls.Add(this.BinaryThresholdShowTB);
             this.skinTabPage1.Controls.Add(this.BinaryThresholdTrackBar);
             this.skinTabPage1.Controls.Add(this.skinButton1);
@@ -245,63 +244,30 @@
             this.skinTabPage1.TabItemImage = null;
             this.skinTabPage1.Text = "二值化";
             // 
-            // DealedImage2PB
+            // BinaryMethodSelectCB
             // 
-            this.DealedImage2PB.BackColor = System.Drawing.Color.Transparent;
-            this.DealedImage2PB.Location = new System.Drawing.Point(522, 321);
-            this.DealedImage2PB.Name = "DealedImage2PB";
-            this.DealedImage2PB.Size = new System.Drawing.Size(480, 270);
-            this.DealedImage2PB.TabIndex = 2;
-            this.DealedImage2PB.TabStop = false;
+            this.BinaryMethodSelectCB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.BinaryMethodSelectCB.FormattingEnabled = true;
+            this.BinaryMethodSelectCB.Items.AddRange(new object[] {
+            "手动阈值调节",
+            "OTSU（大津法）"});
+            this.BinaryMethodSelectCB.Location = new System.Drawing.Point(121, 8);
+            this.BinaryMethodSelectCB.Name = "BinaryMethodSelectCB";
+            this.BinaryMethodSelectCB.Size = new System.Drawing.Size(173, 35);
+            this.BinaryMethodSelectCB.TabIndex = 4;
+            this.BinaryMethodSelectCB.WaterText = "";
             // 
-            // DealedImage1PB
+            // skinLabel1
             // 
-            this.DealedImage1PB.BackColor = System.Drawing.Color.Transparent;
-            this.DealedImage1PB.Location = new System.Drawing.Point(3, 321);
-            this.DealedImage1PB.Name = "DealedImage1PB";
-            this.DealedImage1PB.Size = new System.Drawing.Size(480, 270);
-            this.DealedImage1PB.TabIndex = 1;
-            this.DealedImage1PB.TabStop = false;
-            // 
-            // InitalImagePB
-            // 
-            this.InitalImagePB.BackColor = System.Drawing.Color.Transparent;
-            this.InitalImagePB.Image = ((System.Drawing.Image)(resources.GetObject("InitalImagePB.Image")));
-            this.InitalImagePB.Location = new System.Drawing.Point(3, 3);
-            this.InitalImagePB.Name = "InitalImagePB";
-            this.InitalImagePB.Size = new System.Drawing.Size(480, 270);
-            this.InitalImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.InitalImagePB.TabIndex = 0;
-            this.InitalImagePB.TabStop = false;
-            // 
-            // skinButton1
-            // 
-            this.skinButton1.BackColor = System.Drawing.Color.Transparent;
-            this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
-            this.skinButton1.DownBack = null;
-            this.skinButton1.Location = new System.Drawing.Point(165, 68);
-            this.skinButton1.MouseBack = null;
-            this.skinButton1.Name = "skinButton1";
-            this.skinButton1.NormlBack = null;
-            this.skinButton1.Size = new System.Drawing.Size(157, 54);
-            this.skinButton1.TabIndex = 0;
-            this.skinButton1.Text = "测试";
-            this.skinButton1.UseVisualStyleBackColor = false;
-            this.skinButton1.Click += new System.EventHandler(this.skinButton1_Click);
-            // 
-            // BinaryThresholdTrackBar
-            // 
-            this.BinaryThresholdTrackBar.BackColor = System.Drawing.Color.Transparent;
-            this.BinaryThresholdTrackBar.Bar = null;
-            this.BinaryThresholdTrackBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Opacity;
-            this.BinaryThresholdTrackBar.BaseColor = System.Drawing.Color.Black;
-            this.BinaryThresholdTrackBar.Location = new System.Drawing.Point(3, 175);
-            this.BinaryThresholdTrackBar.Maximum = 255;
-            this.BinaryThresholdTrackBar.Name = "BinaryThresholdTrackBar";
-            this.BinaryThresholdTrackBar.Size = new System.Drawing.Size(337, 56);
-            this.BinaryThresholdTrackBar.TabIndex = 1;
-            this.BinaryThresholdTrackBar.Track = null;
-            this.BinaryThresholdTrackBar.Scroll += new System.EventHandler(this.skinTrackBar1_Scroll);
+            this.skinLabel1.AutoSize = true;
+            this.skinLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel1.BorderColor = System.Drawing.Color.White;
+            this.skinLabel1.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel1.Location = new System.Drawing.Point(3, 11);
+            this.skinLabel1.Name = "skinLabel1";
+            this.skinLabel1.Size = new System.Drawing.Size(112, 27);
+            this.skinLabel1.TabIndex = 3;
+            this.skinLabel1.Text = "二值化方法";
             // 
             // BinaryThresholdShowTB
             // 
@@ -314,7 +280,7 @@
             this.BinaryThresholdShowTB.IsSystemPasswordChar = false;
             this.BinaryThresholdShowTB.Lines = new string[] {
         "0"};
-            this.BinaryThresholdShowTB.Location = new System.Drawing.Point(343, 190);
+            this.BinaryThresholdShowTB.Location = new System.Drawing.Point(340, 101);
             this.BinaryThresholdShowTB.Margin = new System.Windows.Forms.Padding(0);
             this.BinaryThresholdShowTB.MaxLength = 32767;
             this.BinaryThresholdShowTB.MinimumSize = new System.Drawing.Size(28, 28);
@@ -348,6 +314,78 @@
             this.BinaryThresholdShowTB.WaterText = "";
             this.BinaryThresholdShowTB.WordWrap = true;
             // 
+            // BinaryThresholdTrackBar
+            // 
+            this.BinaryThresholdTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.BinaryThresholdTrackBar.Bar = null;
+            this.BinaryThresholdTrackBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Opacity;
+            this.BinaryThresholdTrackBar.BaseColor = System.Drawing.Color.Black;
+            this.BinaryThresholdTrackBar.Location = new System.Drawing.Point(0, 86);
+            this.BinaryThresholdTrackBar.Maximum = 255;
+            this.BinaryThresholdTrackBar.Name = "BinaryThresholdTrackBar";
+            this.BinaryThresholdTrackBar.Size = new System.Drawing.Size(337, 56);
+            this.BinaryThresholdTrackBar.TabIndex = 1;
+            this.BinaryThresholdTrackBar.Track = null;
+            this.BinaryThresholdTrackBar.Scroll += new System.EventHandler(this.skinTrackBar1_Scroll);
+            // 
+            // skinButton1
+            // 
+            this.skinButton1.BackColor = System.Drawing.Color.Transparent;
+            this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.skinButton1.DownBack = null;
+            this.skinButton1.Location = new System.Drawing.Point(237, 162);
+            this.skinButton1.MouseBack = null;
+            this.skinButton1.Name = "skinButton1";
+            this.skinButton1.NormlBack = null;
+            this.skinButton1.Size = new System.Drawing.Size(157, 54);
+            this.skinButton1.TabIndex = 0;
+            this.skinButton1.Text = "测试";
+            this.skinButton1.UseVisualStyleBackColor = false;
+            this.skinButton1.Click += new System.EventHandler(this.skinButton1_Click);
+            // 
+            // DealedImage2PB
+            // 
+            this.DealedImage2PB.BackColor = System.Drawing.Color.Transparent;
+            this.DealedImage2PB.Location = new System.Drawing.Point(522, 321);
+            this.DealedImage2PB.Name = "DealedImage2PB";
+            this.DealedImage2PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage2PB.TabIndex = 2;
+            this.DealedImage2PB.TabStop = false;
+            // 
+            // DealedImage1PB
+            // 
+            this.DealedImage1PB.BackColor = System.Drawing.Color.Transparent;
+            this.DealedImage1PB.Location = new System.Drawing.Point(3, 321);
+            this.DealedImage1PB.Name = "DealedImage1PB";
+            this.DealedImage1PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage1PB.TabIndex = 1;
+            this.DealedImage1PB.TabStop = false;
+            // 
+            // InitalImagePB
+            // 
+            this.InitalImagePB.BackColor = System.Drawing.Color.Transparent;
+            this.InitalImagePB.Image = ((System.Drawing.Image)(resources.GetObject("InitalImagePB.Image")));
+            this.InitalImagePB.Location = new System.Drawing.Point(3, 3);
+            this.InitalImagePB.Name = "InitalImagePB";
+            this.InitalImagePB.Size = new System.Drawing.Size(480, 270);
+            this.InitalImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.InitalImagePB.TabIndex = 0;
+            this.InitalImagePB.TabStop = false;
+            // 
+            // 工具ToolStripMenuItem
+            // 
+            this.工具ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.工具ToolStripMenuItem.Name = "工具ToolStripMenuItem";
+            this.工具ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
+            this.工具ToolStripMenuItem.Text = "工具";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
+            this.toolStripMenuItem1.Text = "串口配置";
+            // 
             // HostComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -362,6 +400,7 @@
             this.MaximizeBox = false;
             this.Name = "HostComputerForm";
             this.Text = "调试用上位机 by上海海事大学";
+            this.Load += new System.EventHandler(this.HostComputerForm_Load);
             this.skinMenuStrip1.ResumeLayout(false);
             this.skinMenuStrip1.PerformLayout();
             this.skinTabControl1.ResumeLayout(false);
@@ -369,10 +408,10 @@
             this.Pre_MethodTabControl.ResumeLayout(false);
             this.skinTabPage1.ResumeLayout(false);
             this.skinTabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BinaryThresholdTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -381,7 +420,6 @@
         #endregion
 
         private CCWin.SkinControl.SkinMenuStrip skinMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem 端口号ToolStripMenuItem;
         private CCWin.SkinControl.SkinToolStrip skinToolStrip1;
         private CCWin.SkinControl.SkinTabControl skinTabControl1;
         private CCWin.SkinControl.SkinTabPage UART_TabPage;
@@ -394,6 +432,10 @@
         private CCWin.SkinControl.SkinButton skinButton1;
         private CCWin.SkinControl.SkinTrackBar BinaryThresholdTrackBar;
         private CCWin.SkinControl.SkinTextBox BinaryThresholdShowTB;
+        private CCWin.SkinControl.SkinComboBox BinaryMethodSelectCB;
+        private CCWin.SkinControl.SkinLabel skinLabel1;
+        private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 
