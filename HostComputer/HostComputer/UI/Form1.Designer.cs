@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostComputerForm));
             this.skinMenuStrip1 = new CCWin.SkinControl.SkinMenuStrip();
+            this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UARTConfigMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skinToolStrip1 = new CCWin.SkinControl.SkinToolStrip();
             this.skinTabControl1 = new CCWin.SkinControl.SkinTabControl();
             this.UART_TabPage = new CCWin.SkinControl.SkinTabPage();
@@ -45,8 +47,6 @@
             this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
-            this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.skinMenuStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
@@ -104,6 +104,21 @@
             this.skinMenuStrip1.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
             this.skinMenuStrip1.TitleRadius = 4;
             this.skinMenuStrip1.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // 工具ToolStripMenuItem
+            // 
+            this.工具ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.UARTConfigMenuItem});
+            this.工具ToolStripMenuItem.Name = "工具ToolStripMenuItem";
+            this.工具ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
+            this.工具ToolStripMenuItem.Text = "工具";
+            // 
+            // UARTConfigMenuItem
+            // 
+            this.UARTConfigMenuItem.Name = "UARTConfigMenuItem";
+            this.UARTConfigMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.UARTConfigMenuItem.Text = "串口配置";
+            this.UARTConfigMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
             // skinToolStrip1
             // 
@@ -372,20 +387,6 @@
             this.InitalImagePB.TabIndex = 0;
             this.InitalImagePB.TabStop = false;
             // 
-            // 工具ToolStripMenuItem
-            // 
-            this.工具ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
-            this.工具ToolStripMenuItem.Name = "工具ToolStripMenuItem";
-            this.工具ToolStripMenuItem.Size = new System.Drawing.Size(51, 24);
-            this.工具ToolStripMenuItem.Text = "工具";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
-            this.toolStripMenuItem1.Text = "串口配置";
-            // 
             // HostComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -435,7 +436,7 @@
         private CCWin.SkinControl.SkinComboBox BinaryMethodSelectCB;
         private CCWin.SkinControl.SkinLabel skinLabel1;
         private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem UARTConfigMenuItem;
     }
 }
 
