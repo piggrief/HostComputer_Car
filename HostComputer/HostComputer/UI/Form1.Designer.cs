@@ -41,17 +41,6 @@
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.skinTabControl1 = new CCWin.SkinControl.SkinTabControl();
             this.UART_TabPage = new CCWin.SkinControl.SkinTabPage();
-            this.ImagePreDealTP = new CCWin.SkinControl.SkinTabPage();
-            this.Pre_MethodTabControl = new CCWin.SkinControl.SkinTabControl();
-            this.skinTabPage1 = new CCWin.SkinControl.SkinTabPage();
-            this.BinaryMethodSelectCB = new CCWin.SkinControl.SkinComboBox();
-            this.skinLabel1 = new CCWin.SkinControl.SkinLabel();
-            this.BinaryThresholdShowTB = new CCWin.SkinControl.SkinTextBox();
-            this.BinaryThresholdTrackBar = new CCWin.SkinControl.SkinTrackBar();
-            this.skinButton1 = new CCWin.SkinControl.SkinButton();
-            this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
-            this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
-            this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
             this.SendGB = new CCWin.SkinControl.SkinGroupBox();
             this.SendTB = new System.Windows.Forms.TextBox();
             this.HexSendCB = new CCWin.SkinControl.SkinCheckBox();
@@ -63,11 +52,32 @@
             this.ReceiveClearBTN = new CCWin.SkinControl.SkinButton();
             this.SaveDataBTN = new CCWin.SkinControl.SkinButton();
             this.SwitchReceiveBTN = new CCWin.SkinControl.SkinButton();
+            this.ImagePreDealTP = new CCWin.SkinControl.SkinTabPage();
+            this.Pre_MethodTabControl = new CCWin.SkinControl.SkinTabControl();
+            this.skinTabPage1 = new CCWin.SkinControl.SkinTabPage();
+            this.BinaryMethodSelectCB = new CCWin.SkinControl.SkinComboBox();
+            this.skinLabel1 = new CCWin.SkinControl.SkinLabel();
+            this.BinaryThresholdShowTB = new CCWin.SkinControl.SkinTextBox();
+            this.BinaryThresholdTrackBar = new CCWin.SkinControl.SkinTrackBar();
+            this.skinButton1 = new CCWin.SkinControl.SkinButton();
+            this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
+            this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
+            this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
             this.skinTabPage2 = new CCWin.SkinControl.SkinTabPage();
+            this.skinLabel2 = new CCWin.SkinControl.SkinLabel();
+            this.skinLabel3 = new CCWin.SkinControl.SkinLabel();
+            this.ReduceRateText = new CCWin.SkinControl.SkinTextBox();
+            this.ThresholdIntervalText = new CCWin.SkinControl.SkinTextBox();
+            this.skinLabel4 = new CCWin.SkinControl.SkinLabel();
+            this.skinLabel5 = new CCWin.SkinControl.SkinLabel();
+            this.BestThresholdText = new CCWin.SkinControl.SkinTextBox();
+            this.skinLabel6 = new CCWin.SkinControl.SkinLabel();
             this.skinMenuStrip1.SuspendLayout();
             this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
             this.UART_TabPage.SuspendLayout();
+            this.SendGB.SuspendLayout();
+            this.ReceiveGB.SuspendLayout();
             this.ImagePreDealTP.SuspendLayout();
             this.Pre_MethodTabControl.SuspendLayout();
             this.skinTabPage1.SuspendLayout();
@@ -75,8 +85,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).BeginInit();
-            this.SendGB.SuspendLayout();
-            this.ReceiveGB.SuspendLayout();
             this.SuspendLayout();
             // 
             // skinMenuStrip1
@@ -137,7 +145,7 @@
             // UARTConfigMenuItem
             // 
             this.UARTConfigMenuItem.Name = "UARTConfigMenuItem";
-            this.UARTConfigMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.UARTConfigMenuItem.Size = new System.Drawing.Size(144, 26);
             this.UARTConfigMenuItem.Text = "串口配置";
             this.UARTConfigMenuItem.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
             // 
@@ -243,7 +251,7 @@
             this.skinTabControl1.PageHover = ((System.Drawing.Image)(resources.GetObject("skinTabControl1.PageHover")));
             this.skinTabControl1.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
             this.skinTabControl1.PageNorml = null;
-            this.skinTabControl1.SelectedIndex = 0;
+            this.skinTabControl1.SelectedIndex = 1;
             this.skinTabControl1.Size = new System.Drawing.Size(1005, 623);
             this.skinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.skinTabControl1.TabIndex = 2;
@@ -260,188 +268,6 @@
             this.UART_TabPage.TabIndex = 0;
             this.UART_TabPage.TabItemImage = null;
             this.UART_TabPage.Text = "串口助手";
-            // 
-            // ImagePreDealTP
-            // 
-            this.ImagePreDealTP.BackColor = System.Drawing.Color.White;
-            this.ImagePreDealTP.Controls.Add(this.Pre_MethodTabControl);
-            this.ImagePreDealTP.Controls.Add(this.DealedImage2PB);
-            this.ImagePreDealTP.Controls.Add(this.DealedImage1PB);
-            this.ImagePreDealTP.Controls.Add(this.InitalImagePB);
-            this.ImagePreDealTP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ImagePreDealTP.Location = new System.Drawing.Point(0, 36);
-            this.ImagePreDealTP.Name = "ImagePreDealTP";
-            this.ImagePreDealTP.Size = new System.Drawing.Size(1005, 587);
-            this.ImagePreDealTP.TabIndex = 1;
-            this.ImagePreDealTP.TabItemImage = null;
-            this.ImagePreDealTP.Text = "图像预处理";
-            // 
-            // Pre_MethodTabControl
-            // 
-            this.Pre_MethodTabControl.AnimatorType = CCWin.SkinControl.AnimationType.HorizSlide;
-            this.Pre_MethodTabControl.CloseRect = new System.Drawing.Rectangle(2, 2, 12, 12);
-            this.Pre_MethodTabControl.Controls.Add(this.skinTabPage1);
-            this.Pre_MethodTabControl.HeadBack = null;
-            this.Pre_MethodTabControl.ImgTxtOffset = new System.Drawing.Point(0, 0);
-            this.Pre_MethodTabControl.ItemSize = new System.Drawing.Size(70, 36);
-            this.Pre_MethodTabControl.Location = new System.Drawing.Point(522, 3);
-            this.Pre_MethodTabControl.Name = "Pre_MethodTabControl";
-            this.Pre_MethodTabControl.PageArrowDown = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageArrowDown")));
-            this.Pre_MethodTabControl.PageArrowHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageArrowHover")));
-            this.Pre_MethodTabControl.PageCloseHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageCloseHover")));
-            this.Pre_MethodTabControl.PageCloseNormal = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageCloseNormal")));
-            this.Pre_MethodTabControl.PageDown = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageDown")));
-            this.Pre_MethodTabControl.PageHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageHover")));
-            this.Pre_MethodTabControl.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
-            this.Pre_MethodTabControl.PageNorml = null;
-            this.Pre_MethodTabControl.SelectedIndex = 0;
-            this.Pre_MethodTabControl.Size = new System.Drawing.Size(480, 270);
-            this.Pre_MethodTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.Pre_MethodTabControl.TabIndex = 3;
-            // 
-            // skinTabPage1
-            // 
-            this.skinTabPage1.BackColor = System.Drawing.Color.White;
-            this.skinTabPage1.Controls.Add(this.BinaryMethodSelectCB);
-            this.skinTabPage1.Controls.Add(this.skinLabel1);
-            this.skinTabPage1.Controls.Add(this.BinaryThresholdShowTB);
-            this.skinTabPage1.Controls.Add(this.BinaryThresholdTrackBar);
-            this.skinTabPage1.Controls.Add(this.skinButton1);
-            this.skinTabPage1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skinTabPage1.Location = new System.Drawing.Point(0, 36);
-            this.skinTabPage1.Name = "skinTabPage1";
-            this.skinTabPage1.Size = new System.Drawing.Size(480, 234);
-            this.skinTabPage1.TabIndex = 0;
-            this.skinTabPage1.TabItemImage = null;
-            this.skinTabPage1.Text = "二值化";
-            // 
-            // BinaryMethodSelectCB
-            // 
-            this.BinaryMethodSelectCB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.BinaryMethodSelectCB.FormattingEnabled = true;
-            this.BinaryMethodSelectCB.Items.AddRange(new object[] {
-            "手动阈值调节",
-            "OTSU（大津法）"});
-            this.BinaryMethodSelectCB.Location = new System.Drawing.Point(121, 8);
-            this.BinaryMethodSelectCB.Name = "BinaryMethodSelectCB";
-            this.BinaryMethodSelectCB.Size = new System.Drawing.Size(173, 35);
-            this.BinaryMethodSelectCB.TabIndex = 4;
-            this.BinaryMethodSelectCB.WaterText = "";
-            // 
-            // skinLabel1
-            // 
-            this.skinLabel1.AutoSize = true;
-            this.skinLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.skinLabel1.BorderColor = System.Drawing.Color.White;
-            this.skinLabel1.Font = new System.Drawing.Font("微软雅黑", 12F);
-            this.skinLabel1.Location = new System.Drawing.Point(3, 11);
-            this.skinLabel1.Name = "skinLabel1";
-            this.skinLabel1.Size = new System.Drawing.Size(112, 27);
-            this.skinLabel1.TabIndex = 3;
-            this.skinLabel1.Text = "二值化方法";
-            // 
-            // BinaryThresholdShowTB
-            // 
-            this.BinaryThresholdShowTB.BackColor = System.Drawing.Color.Transparent;
-            this.BinaryThresholdShowTB.DownBack = null;
-            this.BinaryThresholdShowTB.Icon = null;
-            this.BinaryThresholdShowTB.IconIsButton = false;
-            this.BinaryThresholdShowTB.IconMouseState = CCWin.SkinClass.ControlState.Normal;
-            this.BinaryThresholdShowTB.IsPasswordChat = '\0';
-            this.BinaryThresholdShowTB.IsSystemPasswordChar = false;
-            this.BinaryThresholdShowTB.Lines = new string[] {
-        "0"};
-            this.BinaryThresholdShowTB.Location = new System.Drawing.Point(340, 101);
-            this.BinaryThresholdShowTB.Margin = new System.Windows.Forms.Padding(0);
-            this.BinaryThresholdShowTB.MaxLength = 32767;
-            this.BinaryThresholdShowTB.MinimumSize = new System.Drawing.Size(28, 28);
-            this.BinaryThresholdShowTB.MouseBack = null;
-            this.BinaryThresholdShowTB.MouseState = CCWin.SkinClass.ControlState.Normal;
-            this.BinaryThresholdShowTB.Multiline = false;
-            this.BinaryThresholdShowTB.Name = "BinaryThresholdShowTB";
-            this.BinaryThresholdShowTB.NormlBack = null;
-            this.BinaryThresholdShowTB.Padding = new System.Windows.Forms.Padding(5);
-            this.BinaryThresholdShowTB.ReadOnly = true;
-            this.BinaryThresholdShowTB.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.BinaryThresholdShowTB.Size = new System.Drawing.Size(37, 28);
-            // 
-            // 
-            // 
-            this.BinaryThresholdShowTB.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.BinaryThresholdShowTB.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BinaryThresholdShowTB.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 9.75F);
-            this.BinaryThresholdShowTB.SkinTxt.Location = new System.Drawing.Point(5, 5);
-            this.BinaryThresholdShowTB.SkinTxt.Name = "BaseText";
-            this.BinaryThresholdShowTB.SkinTxt.ReadOnly = true;
-            this.BinaryThresholdShowTB.SkinTxt.Size = new System.Drawing.Size(27, 22);
-            this.BinaryThresholdShowTB.SkinTxt.TabIndex = 0;
-            this.BinaryThresholdShowTB.SkinTxt.Text = "0";
-            this.BinaryThresholdShowTB.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.BinaryThresholdShowTB.SkinTxt.WaterText = "";
-            this.BinaryThresholdShowTB.TabIndex = 2;
-            this.BinaryThresholdShowTB.Text = "0";
-            this.BinaryThresholdShowTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            this.BinaryThresholdShowTB.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
-            this.BinaryThresholdShowTB.WaterText = "";
-            this.BinaryThresholdShowTB.WordWrap = true;
-            // 
-            // BinaryThresholdTrackBar
-            // 
-            this.BinaryThresholdTrackBar.BackColor = System.Drawing.Color.Transparent;
-            this.BinaryThresholdTrackBar.Bar = null;
-            this.BinaryThresholdTrackBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Opacity;
-            this.BinaryThresholdTrackBar.BaseColor = System.Drawing.Color.Black;
-            this.BinaryThresholdTrackBar.Location = new System.Drawing.Point(0, 86);
-            this.BinaryThresholdTrackBar.Maximum = 255;
-            this.BinaryThresholdTrackBar.Name = "BinaryThresholdTrackBar";
-            this.BinaryThresholdTrackBar.Size = new System.Drawing.Size(337, 56);
-            this.BinaryThresholdTrackBar.TabIndex = 1;
-            this.BinaryThresholdTrackBar.Track = null;
-            this.BinaryThresholdTrackBar.Scroll += new System.EventHandler(this.skinTrackBar1_Scroll);
-            // 
-            // skinButton1
-            // 
-            this.skinButton1.BackColor = System.Drawing.Color.Transparent;
-            this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
-            this.skinButton1.DownBack = null;
-            this.skinButton1.Location = new System.Drawing.Point(237, 162);
-            this.skinButton1.MouseBack = null;
-            this.skinButton1.Name = "skinButton1";
-            this.skinButton1.NormlBack = null;
-            this.skinButton1.Size = new System.Drawing.Size(157, 54);
-            this.skinButton1.TabIndex = 0;
-            this.skinButton1.Text = "测试";
-            this.skinButton1.UseVisualStyleBackColor = false;
-            this.skinButton1.Click += new System.EventHandler(this.skinButton1_Click);
-            // 
-            // DealedImage2PB
-            // 
-            this.DealedImage2PB.BackColor = System.Drawing.Color.Transparent;
-            this.DealedImage2PB.Location = new System.Drawing.Point(522, 321);
-            this.DealedImage2PB.Name = "DealedImage2PB";
-            this.DealedImage2PB.Size = new System.Drawing.Size(480, 270);
-            this.DealedImage2PB.TabIndex = 2;
-            this.DealedImage2PB.TabStop = false;
-            // 
-            // DealedImage1PB
-            // 
-            this.DealedImage1PB.BackColor = System.Drawing.Color.Transparent;
-            this.DealedImage1PB.Location = new System.Drawing.Point(3, 321);
-            this.DealedImage1PB.Name = "DealedImage1PB";
-            this.DealedImage1PB.Size = new System.Drawing.Size(480, 270);
-            this.DealedImage1PB.TabIndex = 1;
-            this.DealedImage1PB.TabStop = false;
-            // 
-            // InitalImagePB
-            // 
-            this.InitalImagePB.BackColor = System.Drawing.Color.Transparent;
-            this.InitalImagePB.Image = ((System.Drawing.Image)(resources.GetObject("InitalImagePB.Image")));
-            this.InitalImagePB.Location = new System.Drawing.Point(3, 3);
-            this.InitalImagePB.Name = "InitalImagePB";
-            this.InitalImagePB.Size = new System.Drawing.Size(480, 270);
-            this.InitalImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.InitalImagePB.TabIndex = 0;
-            this.InitalImagePB.TabStop = false;
             // 
             // SendGB
             // 
@@ -628,6 +454,197 @@
             this.SwitchReceiveBTN.UseVisualStyleBackColor = false;
             this.SwitchReceiveBTN.Click += new System.EventHandler(this.SwitchReceiveBTN_Click_1);
             // 
+            // ImagePreDealTP
+            // 
+            this.ImagePreDealTP.BackColor = System.Drawing.Color.White;
+            this.ImagePreDealTP.Controls.Add(this.Pre_MethodTabControl);
+            this.ImagePreDealTP.Controls.Add(this.DealedImage2PB);
+            this.ImagePreDealTP.Controls.Add(this.DealedImage1PB);
+            this.ImagePreDealTP.Controls.Add(this.InitalImagePB);
+            this.ImagePreDealTP.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ImagePreDealTP.Location = new System.Drawing.Point(0, 36);
+            this.ImagePreDealTP.Name = "ImagePreDealTP";
+            this.ImagePreDealTP.Size = new System.Drawing.Size(1005, 587);
+            this.ImagePreDealTP.TabIndex = 1;
+            this.ImagePreDealTP.TabItemImage = null;
+            this.ImagePreDealTP.Text = "图像预处理";
+            // 
+            // Pre_MethodTabControl
+            // 
+            this.Pre_MethodTabControl.AnimatorType = CCWin.SkinControl.AnimationType.HorizSlide;
+            this.Pre_MethodTabControl.CloseRect = new System.Drawing.Rectangle(2, 2, 12, 12);
+            this.Pre_MethodTabControl.Controls.Add(this.skinTabPage1);
+            this.Pre_MethodTabControl.HeadBack = null;
+            this.Pre_MethodTabControl.ImgTxtOffset = new System.Drawing.Point(0, 0);
+            this.Pre_MethodTabControl.ItemSize = new System.Drawing.Size(70, 36);
+            this.Pre_MethodTabControl.Location = new System.Drawing.Point(522, 3);
+            this.Pre_MethodTabControl.Name = "Pre_MethodTabControl";
+            this.Pre_MethodTabControl.PageArrowDown = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageArrowDown")));
+            this.Pre_MethodTabControl.PageArrowHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageArrowHover")));
+            this.Pre_MethodTabControl.PageCloseHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageCloseHover")));
+            this.Pre_MethodTabControl.PageCloseNormal = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageCloseNormal")));
+            this.Pre_MethodTabControl.PageDown = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageDown")));
+            this.Pre_MethodTabControl.PageHover = ((System.Drawing.Image)(resources.GetObject("Pre_MethodTabControl.PageHover")));
+            this.Pre_MethodTabControl.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
+            this.Pre_MethodTabControl.PageNorml = null;
+            this.Pre_MethodTabControl.SelectedIndex = 0;
+            this.Pre_MethodTabControl.Size = new System.Drawing.Size(480, 270);
+            this.Pre_MethodTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.Pre_MethodTabControl.TabIndex = 3;
+            // 
+            // skinTabPage1
+            // 
+            this.skinTabPage1.BackColor = System.Drawing.Color.White;
+            this.skinTabPage1.Controls.Add(this.BestThresholdText);
+            this.skinTabPage1.Controls.Add(this.skinLabel6);
+            this.skinTabPage1.Controls.Add(this.skinLabel5);
+            this.skinTabPage1.Controls.Add(this.skinLabel4);
+            this.skinTabPage1.Controls.Add(this.ThresholdIntervalText);
+            this.skinTabPage1.Controls.Add(this.ReduceRateText);
+            this.skinTabPage1.Controls.Add(this.skinLabel3);
+            this.skinTabPage1.Controls.Add(this.skinLabel2);
+            this.skinTabPage1.Controls.Add(this.BinaryMethodSelectCB);
+            this.skinTabPage1.Controls.Add(this.skinLabel1);
+            this.skinTabPage1.Controls.Add(this.BinaryThresholdShowTB);
+            this.skinTabPage1.Controls.Add(this.BinaryThresholdTrackBar);
+            this.skinTabPage1.Controls.Add(this.skinButton1);
+            this.skinTabPage1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.skinTabPage1.Location = new System.Drawing.Point(0, 36);
+            this.skinTabPage1.Name = "skinTabPage1";
+            this.skinTabPage1.Size = new System.Drawing.Size(480, 234);
+            this.skinTabPage1.TabIndex = 0;
+            this.skinTabPage1.TabItemImage = null;
+            this.skinTabPage1.Text = "二值化";
+            // 
+            // BinaryMethodSelectCB
+            // 
+            this.BinaryMethodSelectCB.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.BinaryMethodSelectCB.FormattingEnabled = true;
+            this.BinaryMethodSelectCB.Items.AddRange(new object[] {
+            "手动阈值调节",
+            "OTSU（大津法）"});
+            this.BinaryMethodSelectCB.Location = new System.Drawing.Point(141, 8);
+            this.BinaryMethodSelectCB.Name = "BinaryMethodSelectCB";
+            this.BinaryMethodSelectCB.Size = new System.Drawing.Size(153, 35);
+            this.BinaryMethodSelectCB.TabIndex = 4;
+            this.BinaryMethodSelectCB.WaterText = "";
+            this.BinaryMethodSelectCB.SelectedValueChanged += new System.EventHandler(this.BinaryMethodSelectCB_SelectedValueChanged);
+            // 
+            // skinLabel1
+            // 
+            this.skinLabel1.AutoSize = true;
+            this.skinLabel1.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel1.BorderColor = System.Drawing.Color.White;
+            this.skinLabel1.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel1.Location = new System.Drawing.Point(3, 11);
+            this.skinLabel1.Name = "skinLabel1";
+            this.skinLabel1.Size = new System.Drawing.Size(112, 27);
+            this.skinLabel1.TabIndex = 3;
+            this.skinLabel1.Text = "二值化方法";
+            // 
+            // BinaryThresholdShowTB
+            // 
+            this.BinaryThresholdShowTB.BackColor = System.Drawing.Color.Transparent;
+            this.BinaryThresholdShowTB.DownBack = null;
+            this.BinaryThresholdShowTB.Icon = null;
+            this.BinaryThresholdShowTB.IconIsButton = false;
+            this.BinaryThresholdShowTB.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BinaryThresholdShowTB.IsPasswordChat = '\0';
+            this.BinaryThresholdShowTB.IsSystemPasswordChar = false;
+            this.BinaryThresholdShowTB.Lines = new string[] {
+        "0"};
+            this.BinaryThresholdShowTB.Location = new System.Drawing.Point(340, 190);
+            this.BinaryThresholdShowTB.Margin = new System.Windows.Forms.Padding(0);
+            this.BinaryThresholdShowTB.MaxLength = 32767;
+            this.BinaryThresholdShowTB.MinimumSize = new System.Drawing.Size(28, 28);
+            this.BinaryThresholdShowTB.MouseBack = null;
+            this.BinaryThresholdShowTB.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BinaryThresholdShowTB.Multiline = false;
+            this.BinaryThresholdShowTB.Name = "BinaryThresholdShowTB";
+            this.BinaryThresholdShowTB.NormlBack = null;
+            this.BinaryThresholdShowTB.Padding = new System.Windows.Forms.Padding(5);
+            this.BinaryThresholdShowTB.ReadOnly = true;
+            this.BinaryThresholdShowTB.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.BinaryThresholdShowTB.Size = new System.Drawing.Size(37, 28);
+            // 
+            // 
+            // 
+            this.BinaryThresholdShowTB.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.BinaryThresholdShowTB.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BinaryThresholdShowTB.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 9.75F);
+            this.BinaryThresholdShowTB.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.BinaryThresholdShowTB.SkinTxt.Name = "BaseText";
+            this.BinaryThresholdShowTB.SkinTxt.ReadOnly = true;
+            this.BinaryThresholdShowTB.SkinTxt.Size = new System.Drawing.Size(27, 22);
+            this.BinaryThresholdShowTB.SkinTxt.TabIndex = 0;
+            this.BinaryThresholdShowTB.SkinTxt.Text = "0";
+            this.BinaryThresholdShowTB.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BinaryThresholdShowTB.SkinTxt.WaterText = "";
+            this.BinaryThresholdShowTB.TabIndex = 2;
+            this.BinaryThresholdShowTB.Text = "0";
+            this.BinaryThresholdShowTB.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.BinaryThresholdShowTB.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BinaryThresholdShowTB.WaterText = "";
+            this.BinaryThresholdShowTB.WordWrap = true;
+            // 
+            // BinaryThresholdTrackBar
+            // 
+            this.BinaryThresholdTrackBar.BackColor = System.Drawing.Color.Transparent;
+            this.BinaryThresholdTrackBar.Bar = null;
+            this.BinaryThresholdTrackBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Opacity;
+            this.BinaryThresholdTrackBar.BaseColor = System.Drawing.Color.Black;
+            this.BinaryThresholdTrackBar.Location = new System.Drawing.Point(0, 175);
+            this.BinaryThresholdTrackBar.Maximum = 255;
+            this.BinaryThresholdTrackBar.Name = "BinaryThresholdTrackBar";
+            this.BinaryThresholdTrackBar.Size = new System.Drawing.Size(337, 56);
+            this.BinaryThresholdTrackBar.TabIndex = 1;
+            this.BinaryThresholdTrackBar.Track = null;
+            this.BinaryThresholdTrackBar.Scroll += new System.EventHandler(this.skinTrackBar1_Scroll);
+            // 
+            // skinButton1
+            // 
+            this.skinButton1.BackColor = System.Drawing.Color.Transparent;
+            this.skinButton1.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.skinButton1.DownBack = null;
+            this.skinButton1.Location = new System.Drawing.Point(403, 177);
+            this.skinButton1.MouseBack = null;
+            this.skinButton1.Name = "skinButton1";
+            this.skinButton1.NormlBack = null;
+            this.skinButton1.Size = new System.Drawing.Size(74, 54);
+            this.skinButton1.TabIndex = 0;
+            this.skinButton1.Text = "测试";
+            this.skinButton1.UseVisualStyleBackColor = false;
+            this.skinButton1.Click += new System.EventHandler(this.skinButton1_Click);
+            // 
+            // DealedImage2PB
+            // 
+            this.DealedImage2PB.BackColor = System.Drawing.Color.Transparent;
+            this.DealedImage2PB.Location = new System.Drawing.Point(522, 321);
+            this.DealedImage2PB.Name = "DealedImage2PB";
+            this.DealedImage2PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage2PB.TabIndex = 2;
+            this.DealedImage2PB.TabStop = false;
+            // 
+            // DealedImage1PB
+            // 
+            this.DealedImage1PB.BackColor = System.Drawing.Color.Transparent;
+            this.DealedImage1PB.Location = new System.Drawing.Point(3, 321);
+            this.DealedImage1PB.Name = "DealedImage1PB";
+            this.DealedImage1PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage1PB.TabIndex = 1;
+            this.DealedImage1PB.TabStop = false;
+            // 
+            // InitalImagePB
+            // 
+            this.InitalImagePB.BackColor = System.Drawing.Color.Transparent;
+            this.InitalImagePB.Image = ((System.Drawing.Image)(resources.GetObject("InitalImagePB.Image")));
+            this.InitalImagePB.Location = new System.Drawing.Point(3, 3);
+            this.InitalImagePB.Name = "InitalImagePB";
+            this.InitalImagePB.Size = new System.Drawing.Size(480, 270);
+            this.InitalImagePB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.InitalImagePB.TabIndex = 0;
+            this.InitalImagePB.TabStop = false;
+            // 
             // skinTabPage2
             // 
             this.skinTabPage2.BackColor = System.Drawing.Color.White;
@@ -638,6 +655,199 @@
             this.skinTabPage2.TabIndex = 2;
             this.skinTabPage2.TabItemImage = null;
             this.skinTabPage2.Text = "参数调节";
+            // 
+            // skinLabel2
+            // 
+            this.skinLabel2.AutoSize = true;
+            this.skinLabel2.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel2.BorderColor = System.Drawing.Color.White;
+            this.skinLabel2.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel2.Location = new System.Drawing.Point(3, 56);
+            this.skinLabel2.Name = "skinLabel2";
+            this.skinLabel2.Size = new System.Drawing.Size(132, 27);
+            this.skinLabel2.TabIndex = 5;
+            this.skinLabel2.Text = "图像缩小比例";
+            // 
+            // skinLabel3
+            // 
+            this.skinLabel3.AutoSize = true;
+            this.skinLabel3.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel3.BorderColor = System.Drawing.Color.White;
+            this.skinLabel3.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel3.Location = new System.Drawing.Point(3, 103);
+            this.skinLabel3.Name = "skinLabel3";
+            this.skinLabel3.Size = new System.Drawing.Size(132, 27);
+            this.skinLabel3.TabIndex = 7;
+            this.skinLabel3.Text = "阈值试探间隔";
+            // 
+            // ReduceRateText
+            // 
+            this.ReduceRateText.BackColor = System.Drawing.Color.Transparent;
+            this.ReduceRateText.DownBack = null;
+            this.ReduceRateText.Icon = null;
+            this.ReduceRateText.IconIsButton = false;
+            this.ReduceRateText.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.ReduceRateText.IsPasswordChat = '\0';
+            this.ReduceRateText.IsSystemPasswordChar = false;
+            this.ReduceRateText.Lines = new string[] {
+        "4"};
+            this.ReduceRateText.Location = new System.Drawing.Point(141, 55);
+            this.ReduceRateText.Margin = new System.Windows.Forms.Padding(0);
+            this.ReduceRateText.MaxLength = 32767;
+            this.ReduceRateText.MinimumSize = new System.Drawing.Size(28, 28);
+            this.ReduceRateText.MouseBack = null;
+            this.ReduceRateText.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.ReduceRateText.Multiline = false;
+            this.ReduceRateText.Name = "ReduceRateText";
+            this.ReduceRateText.NormlBack = null;
+            this.ReduceRateText.Padding = new System.Windows.Forms.Padding(5);
+            this.ReduceRateText.ReadOnly = false;
+            this.ReduceRateText.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.ReduceRateText.Size = new System.Drawing.Size(153, 28);
+            // 
+            // 
+            // 
+            this.ReduceRateText.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ReduceRateText.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ReduceRateText.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.ReduceRateText.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.ReduceRateText.SkinTxt.Name = "BaseText";
+            this.ReduceRateText.SkinTxt.Size = new System.Drawing.Size(143, 27);
+            this.ReduceRateText.SkinTxt.TabIndex = 0;
+            this.ReduceRateText.SkinTxt.Text = "4";
+            this.ReduceRateText.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.ReduceRateText.SkinTxt.WaterText = "";
+            this.ReduceRateText.TabIndex = 9;
+            this.ReduceRateText.Text = "4";
+            this.ReduceRateText.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.ReduceRateText.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.ReduceRateText.WaterText = "";
+            this.ReduceRateText.WordWrap = true;
+            // 
+            // ThresholdIntervalText
+            // 
+            this.ThresholdIntervalText.BackColor = System.Drawing.Color.Transparent;
+            this.ThresholdIntervalText.DownBack = null;
+            this.ThresholdIntervalText.Icon = null;
+            this.ThresholdIntervalText.IconIsButton = false;
+            this.ThresholdIntervalText.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.ThresholdIntervalText.IsPasswordChat = '\0';
+            this.ThresholdIntervalText.IsSystemPasswordChar = false;
+            this.ThresholdIntervalText.Lines = new string[] {
+        "5"};
+            this.ThresholdIntervalText.Location = new System.Drawing.Point(141, 103);
+            this.ThresholdIntervalText.Margin = new System.Windows.Forms.Padding(0);
+            this.ThresholdIntervalText.MaxLength = 32767;
+            this.ThresholdIntervalText.MinimumSize = new System.Drawing.Size(28, 28);
+            this.ThresholdIntervalText.MouseBack = null;
+            this.ThresholdIntervalText.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.ThresholdIntervalText.Multiline = false;
+            this.ThresholdIntervalText.Name = "ThresholdIntervalText";
+            this.ThresholdIntervalText.NormlBack = null;
+            this.ThresholdIntervalText.Padding = new System.Windows.Forms.Padding(5);
+            this.ThresholdIntervalText.ReadOnly = false;
+            this.ThresholdIntervalText.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.ThresholdIntervalText.Size = new System.Drawing.Size(153, 28);
+            // 
+            // 
+            // 
+            this.ThresholdIntervalText.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ThresholdIntervalText.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ThresholdIntervalText.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.ThresholdIntervalText.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.ThresholdIntervalText.SkinTxt.Name = "BaseText";
+            this.ThresholdIntervalText.SkinTxt.Size = new System.Drawing.Size(143, 27);
+            this.ThresholdIntervalText.SkinTxt.TabIndex = 0;
+            this.ThresholdIntervalText.SkinTxt.Text = "5";
+            this.ThresholdIntervalText.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.ThresholdIntervalText.SkinTxt.WaterText = "";
+            this.ThresholdIntervalText.TabIndex = 10;
+            this.ThresholdIntervalText.Text = "5";
+            this.ThresholdIntervalText.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.ThresholdIntervalText.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.ThresholdIntervalText.WaterText = "";
+            this.ThresholdIntervalText.WordWrap = true;
+            // 
+            // skinLabel4
+            // 
+            this.skinLabel4.AutoSize = true;
+            this.skinLabel4.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel4.BorderColor = System.Drawing.Color.White;
+            this.skinLabel4.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel4.Location = new System.Drawing.Point(297, 56);
+            this.skinLabel4.Name = "skinLabel4";
+            this.skinLabel4.Size = new System.Drawing.Size(32, 27);
+            this.skinLabel4.TabIndex = 11;
+            this.skinLabel4.Text = "倍";
+            // 
+            // skinLabel5
+            // 
+            this.skinLabel5.AutoSize = true;
+            this.skinLabel5.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel5.BorderColor = System.Drawing.Color.White;
+            this.skinLabel5.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel5.Location = new System.Drawing.Point(297, 104);
+            this.skinLabel5.Name = "skinLabel5";
+            this.skinLabel5.Size = new System.Drawing.Size(219, 27);
+            this.skinLabel5.TabIndex = 12;
+            this.skinLabel5.Text = "（必须为>1的正整数）";
+            // 
+            // BestThresholdText
+            // 
+            this.BestThresholdText.BackColor = System.Drawing.Color.Transparent;
+            this.BestThresholdText.DownBack = null;
+            this.BestThresholdText.Icon = null;
+            this.BestThresholdText.IconIsButton = false;
+            this.BestThresholdText.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BestThresholdText.IsPasswordChat = '\0';
+            this.BestThresholdText.IsSystemPasswordChar = false;
+            this.BestThresholdText.Lines = new string[] {
+        "未启动OTSU"};
+            this.BestThresholdText.Location = new System.Drawing.Point(141, 145);
+            this.BestThresholdText.Margin = new System.Windows.Forms.Padding(0);
+            this.BestThresholdText.MaxLength = 32767;
+            this.BestThresholdText.MinimumSize = new System.Drawing.Size(28, 28);
+            this.BestThresholdText.MouseBack = null;
+            this.BestThresholdText.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.BestThresholdText.Multiline = false;
+            this.BestThresholdText.Name = "BestThresholdText";
+            this.BestThresholdText.NormlBack = null;
+            this.BestThresholdText.Padding = new System.Windows.Forms.Padding(5);
+            this.BestThresholdText.ReadOnly = true;
+            this.BestThresholdText.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.BestThresholdText.Size = new System.Drawing.Size(153, 28);
+            // 
+            // 
+            // 
+            this.BestThresholdText.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.BestThresholdText.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BestThresholdText.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.BestThresholdText.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.BestThresholdText.SkinTxt.Name = "BaseText";
+            this.BestThresholdText.SkinTxt.ReadOnly = true;
+            this.BestThresholdText.SkinTxt.Size = new System.Drawing.Size(143, 27);
+            this.BestThresholdText.SkinTxt.TabIndex = 0;
+            this.BestThresholdText.SkinTxt.Text = "100";
+            this.BestThresholdText.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BestThresholdText.SkinTxt.WaterText = "";
+            this.BestThresholdText.TabIndex = 14;
+            this.BestThresholdText.Text = "未启动OTSU";
+            this.BestThresholdText.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.BestThresholdText.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.BestThresholdText.WaterText = "";
+            this.BestThresholdText.WordWrap = true;
+            // 
+            // skinLabel6
+            // 
+            this.skinLabel6.AutoSize = true;
+            this.skinLabel6.BackColor = System.Drawing.Color.Transparent;
+            this.skinLabel6.BorderColor = System.Drawing.Color.White;
+            this.skinLabel6.Font = new System.Drawing.Font("微软雅黑", 12F);
+            this.skinLabel6.Location = new System.Drawing.Point(3, 145);
+            this.skinLabel6.Name = "skinLabel6";
+            this.skinLabel6.Size = new System.Drawing.Size(92, 27);
+            this.skinLabel6.TabIndex = 13;
+            this.skinLabel6.Text = "最佳阈值";
             // 
             // HostComputerForm
             // 
@@ -661,6 +871,10 @@
             this.skinToolStrip1.PerformLayout();
             this.skinTabControl1.ResumeLayout(false);
             this.UART_TabPage.ResumeLayout(false);
+            this.SendGB.ResumeLayout(false);
+            this.SendGB.PerformLayout();
+            this.ReceiveGB.ResumeLayout(false);
+            this.ReceiveGB.PerformLayout();
             this.ImagePreDealTP.ResumeLayout(false);
             this.Pre_MethodTabControl.ResumeLayout(false);
             this.skinTabPage1.ResumeLayout(false);
@@ -669,10 +883,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).EndInit();
-            this.SendGB.ResumeLayout(false);
-            this.SendGB.PerformLayout();
-            this.ReceiveGB.ResumeLayout(false);
-            this.ReceiveGB.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -714,6 +924,14 @@
         private CCWin.SkinControl.SkinButton SaveDataBTN;
         private CCWin.SkinControl.SkinButton SwitchReceiveBTN;
         private CCWin.SkinControl.SkinTabPage skinTabPage2;
+        private CCWin.SkinControl.SkinTextBox ThresholdIntervalText;
+        private CCWin.SkinControl.SkinTextBox ReduceRateText;
+        private CCWin.SkinControl.SkinLabel skinLabel3;
+        private CCWin.SkinControl.SkinLabel skinLabel2;
+        private CCWin.SkinControl.SkinLabel skinLabel5;
+        private CCWin.SkinControl.SkinLabel skinLabel4;
+        private CCWin.SkinControl.SkinTextBox BestThresholdText;
+        private CCWin.SkinControl.SkinLabel skinLabel6;
     }
 }
 

@@ -19,6 +19,7 @@ using UartComunication;
 
 using AForge;
 using AForge.Imaging;
+using AForge.Math.Geometry;
 
 namespace HostComputer
 {
@@ -80,10 +81,21 @@ namespace HostComputer
             Bitmap GrayImage = IDF.RGBToGray(OImage);
             DealedImage1PB.Image = GrayImage;
 
-            UInt16 Threshold = IDF.FindThreshold_OTSUNormal(GrayImage, 10);
-            BinaryThresholdShowTB.Text = Threshold.ToString();
-            Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, Convert.ToUInt16(Threshold));
-            DealedImage2PB.Image = BinaryImage;
+            if (BinaryMethodSelectCB.SelectedIndex == 0)
+            {
+                Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, 
+                    Convert.ToUInt16(BinaryThresholdTrackBar.Value));
+                DealedImage2PB.Image = BinaryImage;
+            }
+            else if (BinaryMethodSelectCB.SelectedIndex == 1)
+            {
+                UInt16 Threshold = IDF.FindThreshold_OTSUNormal(GrayImage, 10);
+                BestThresholdText.Text = Threshold.ToString();
+                Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, Convert.ToUInt16(Threshold));
+                DealedImage2PB.Image = BinaryImage;
+
+
+            }
 
         }
 
@@ -400,6 +412,45 @@ namespace HostComputer
         private void ReceiveClearBTN_Click_1(object sender, EventArgs e)
         {
             ReceiveTB.Text = "";
+        }
+        /// <summary>
+        /// 二值化方法选择ComboBox选择值改变事件，主要用于切换空间显示
+        /// </summary>
+        private void BinaryMethodSelectCB_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (BinaryMethodSelectCB.SelectedIndex == 1)
+            {
+                skinLabel2.Visible = true;
+                skinLabel3.Visible = true;
+                skinLabel4.Visible = true;
+                skinLabel5.Visible = true;
+                skinLabel6.Visible = true;
+                ReduceRateText.Visible = true;
+                ThresholdIntervalText.Visible = true;
+                BestThresholdText.Visible = true;
+                BestThresholdText.Text = "未启动OTSU";
+            }
+            else
+            {
+                skinLabel2.Visible = false;
+                skinLabel3.Visible = false;
+                skinLabel4.Visible = false;
+                skinLabel5.Visible = false;
+                skinLabel6.Visible = false;
+                ReduceRateText.Visible = false;
+                ThresholdIntervalText.Visible = false;
+                BestThresholdText.Visible = false;
+            }
+            if (BinaryMethodSelectCB.SelectedIndex == 0)
+            {
+                BinaryThresholdTrackBar.Visible = true;
+                BinaryThresholdShowTB.Visible = true;
+            }
+            else
+            {
+                BinaryThresholdTrackBar.Visible = false;
+                BinaryThresholdShowTB.Visible = false;
+            }
         }
 
 
