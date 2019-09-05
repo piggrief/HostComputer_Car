@@ -16,6 +16,7 @@ using CCWin;
 using ImageDeal_Pig;
 using HostComputer.UI;
 using UartComunication;
+using PigCommunication;
 
 using AForge;
 using AForge.Imaging;
@@ -178,7 +179,7 @@ namespace HostComputer
                 //创建代理对象TimerCallback，该代理将被定时调用
                 TimerCallback timerDelegate = new TimerCallback(TimerRecive);
                 //创建一个时间间隔为1s的定时器
-                System.Threading.Timer timer = new System.Threading.Timer(timerDelegate, s, 0, 100);
+                System.Threading.Timer timer = new System.Threading.Timer(timerDelegate, s, 0, 10);
                 s.tmr = timer;
                 #endregion
 
@@ -215,7 +216,7 @@ namespace HostComputer
                 if (HexCB.Checked == true)
                 {
                     strRecieve = "";
-                    byte[] Receivebuff = new byte[500];
+                    byte[] Receivebuff = new byte[50000];
                     int ReceiveNum = UsedUart.sp.Read(Receivebuff, 0, UsedUart.sp.BytesToRead);
 
                     if (ReceiveNum > 0)
