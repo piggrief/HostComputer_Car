@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -451,6 +452,32 @@ namespace HostComputer
             {
                 BinaryThresholdTrackBar.Visible = false;
                 BinaryThresholdShowTB.Visible = false;
+            }
+        }
+        /// <summary>
+        /// 用于打开文件并保存数据
+        /// </summary>
+        private void SaveDataBTN_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog SFD = new SaveFileDialog();//创建打开文件对话框对象
+            //SFD.Title = "请选择文件夹";
+            SFD.Filter = "文本文件(*.txt)|*.txt";
+            SFD.RestoreDirectory = true;
+
+            string FilePath = "";
+            string fileNameExt = "";
+            if (SFD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                FilePath = SFD.FileName;//路径+文件名
+                fileNameExt = FilePath.Substring(FilePath.LastIndexOf("\\") + 1);//文件名不含路径
+
+                FileStream FS = new FileStream(FilePath, FileMode.Append, FileAccess.Write);
+                byte[] data = System.Text.Encoding.Default.GetBytes(ReceiveTB.Text);
+
+                FS.Write(data, 0, data.Length);
+                FS.Flush();
+                FS.Close();
+                MessageBox.Show("保存成功！");
             }
         }
 
