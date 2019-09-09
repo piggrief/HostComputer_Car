@@ -34,7 +34,6 @@ namespace HostComputer
 
         public ImageDealFlow IDF = new ImageDealFlow();
         public UART UsedUart = new UART();
-
         class TimerExampleState
         {
             public int counter = 0;
@@ -67,6 +66,9 @@ namespace HostComputer
         string strRecieve;
         TimerExampleState s = new TimerExampleState();
 
+        Communication UsedUARTCommunication = new Communication();//通信协议对象
+
+        Thread UartDataDecoding;//串口数据解算线程
 
         public HostComputerForm()
         {
@@ -112,6 +114,8 @@ namespace HostComputer
             BinaryMethodSelectCB.SelectedIndex = 0;
             if (Debugger.IsAttached)
                 AllocConsole();
+            UartDataDecoding = new Thread(UsedUARTCommunication.DataDecoding);
+            UartDataDecoding.Start();
         }
         /// <summary>
         /// 打开串口配置界面
@@ -146,6 +150,45 @@ namespace HostComputer
         {
 
         }
+
+        /// <summary>
+        /// 串口接收事件
+        /// </summary>
+        private void UART_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
+        {
+            byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
+            UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);
+            if (UsedUARTCommunication.NowDecodingStatus == DecodingStatus.Decoded)
+            {
+                lock (this)
+                {
+                    for (int i = 0; i < ReceivedBuff.Length; i++)
+                    {
+                        UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
+                    }
+                }
+                UsedUARTCommunication.NowDecodingStatus = DecodingStatus.Check_BagBeginning;
+            }
+            else
+            {
+                lock (this)
+                {
+                    for (int i = 0; i < ReceivedBuff.Length; i++)
+                    {
+                        UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
+                    }
+                }
+            }
+            if (HexCB.Checked)
+            {
+                lock (this)
+                {
+                    UsedUARTCommunication.PrintByteStrWithByteArr(UsedUARTCommunication.ReceivedBuff);
+                }
+            }
+            else
+                Console.WriteLine(System.Text.Encoding.Default.GetString(ReceivedBuff));
+        }
         /// <summary>
         /// 用来切换串口接收或者串口不接收
         /// </summary>
@@ -158,6 +201,7 @@ namespace HostComputer
             if (NowUartReceiveStatus == UARTReceiveStatus.SerialPortClosed || NowUartSendStatus == UARTSendStatus.SerialPortClosed)
             {
                 //UsedUart.SetSerialPort(PortCB.Text, int.Parse(BaudCB.Text), int.Parse(DataBitsCB.Text), int.Parse(StopBitsCB.Text));
+                UsedUart.sp.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(UART_DataReceived);
                 if (UsedUart.SwtichSP(true) == true)//打开成功
                 {
                     NowUartReceiveStatus = UARTReceiveStatus.SerialPortOpen;
@@ -176,13 +220,13 @@ namespace HostComputer
             {
                 UsedUart.sp.Encoding = Encoding.GetEncoding("GB2312");
                 //使用委托以及多线程进行
-                #region 打开多线程定时器
-                //创建代理对象TimerCallback，该代理将被定时调用
-                TimerCallback timerDelegate = new TimerCallback(TimerRecive);
-                //创建一个时间间隔为1s的定时器
-                System.Threading.Timer timer = new System.Threading.Timer(timerDelegate, s, 0, 10);
-                s.tmr = timer;
-                #endregion
+                //#region 打开多线程定时器
+                ////创建代理对象TimerCallback，该代理将被定时调用
+                //TimerCallback timerDelegate = new TimerCallback(TimerRecive);
+                ////创建一个时间间隔为1s的定时器
+                //System.Threading.Timer timer = new System.Threading.Timer(timerDelegate, s, 0, 10);
+                //s.tmr = timer;
+                //#endregion
 
                 SwitchReceiveBTN.Text = "停止接收";
                 NowUartReceiveStatus = UARTReceiveStatus.DataReceiving;
@@ -227,8 +271,8 @@ namespace HostComputer
                             int hexnum1 = Receivebuff[i] / 16;
                             int hexnum2 = Receivebuff[i] % 16;
 
-                            strRecieve += IntToHexChar(hexnum1);
-                            strRecieve += IntToHexChar(hexnum2);
+                            strRecieve += Communication.IntToHexChar(hexnum1);
+                            strRecieve += Communication.IntToHexChar(hexnum2);
                             strRecieve += " ";
 
                             //strRecieve += Receivebuff[i];
@@ -264,63 +308,11 @@ namespace HostComputer
         {
             if (Debugger.IsAttached)
                 FreeConsole();
+            UartDataDecoding.Abort();
+            UartDataDecoding.Join();
             Application.Exit();
         }
-        /// <summary>
-        /// int数字转换成Hex字符
-        /// </summary>
-        private string IntToHexChar(int HexNum)
-        {
-            if (HexNum >= 16 || HexNum < 0)
-            { MessageBox.Show("输入的Hex数字超过了0~15"); return ""; }
-            else if (HexNum < 10)
-                return HexNum.ToString();
-            else
-            {
-                switch (HexNum)
-                {
-                    case 10: return "A";
-                    case 11: return "B";
-                    case 12: return "C";
-                    case 13: return "D";
-                    case 14: return "E";
-                    case 15: return "F";
-                    default: return "";
-                }
-            }
-        }
-        /// <summary>
-        /// Hex字符转Byte
-        /// </summary>
-        /// <param name="HexChar">Hex字符</param>
-        /// <returns>Byte输出</returns>
-        private byte HexCharToByte(string HexChar)
-        {
-            int NumBuff = 0;
-            if (int.TryParse(HexChar, out NumBuff))
-            {
-                return Convert.ToByte(NumBuff);
-            }
-            else
-            {
-                switch (HexChar)
-                {
-                    case "A": return Convert.ToByte(10);
-                    case "B": return Convert.ToByte(11);
-                    case "C": return Convert.ToByte(12);
-                    case "D": return Convert.ToByte(13);
-                    case "E": return Convert.ToByte(14);
-                    case "F": return Convert.ToByte(15);
-                    case "a": return Convert.ToByte(10);
-                    case "b": return Convert.ToByte(11);
-                    case "c": return Convert.ToByte(12);
-                    case "d": return Convert.ToByte(13);
-                    case "e": return Convert.ToByte(14);
-                    case "f": return Convert.ToByte(15);
-                    default: MessageBox.Show("Hex格式不正确"); return Convert.ToByte(0);                   
-                }
-            }
-        }
+
         private const string HexCheckString = "0123456789abcdefABCDEF";
         /// <summary>
         /// 用来将发送区文本框的文本通过串口发送
@@ -387,8 +379,8 @@ namespace HostComputer
                     byte[] sendbuff = new byte[size];
                     for (int i = 0; i < strbuff.Length; i += 3)
                     {
-                        byte num1 = Convert.ToByte(HexCharToByte(strbuff[i].ToString()) * 16);
-                        byte num2 = HexCharToByte(strbuff[i + 1].ToString());
+                        byte num1 = Convert.ToByte(Communication.HexCharToByte(strbuff[i].ToString()) * 16);
+                        byte num2 = Communication.HexCharToByte(strbuff[i + 1].ToString());
                         sendbuff[i / 3] = Convert.ToByte(num1 + num2);
                     }
 
@@ -479,6 +471,12 @@ namespace HostComputer
                 FS.Close();
                 MessageBox.Show("保存成功！");
             }
+        }
+
+        private void TestBTN2_Click(object sender, EventArgs e)
+        {
+            
+            //Console.WriteLine(Array.IndexOf(DataBag, 0x55).ToString());
         }
     }
 }

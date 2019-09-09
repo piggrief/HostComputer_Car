@@ -72,6 +72,7 @@
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
             this.skinTabPage2 = new CCWin.SkinControl.SkinTabPage();
+            this.TestBTN2 = new CCWin.SkinControl.SkinButton();
             this.skinMenuStrip1.SuspendLayout();
             this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
@@ -357,6 +358,7 @@
             // 
             this.ReceiveGB.BackColor = System.Drawing.Color.Transparent;
             this.ReceiveGB.BorderColor = System.Drawing.Color.SteelBlue;
+            this.ReceiveGB.Controls.Add(this.TestBTN2);
             this.ReceiveGB.Controls.Add(this.ReceiveTB);
             this.ReceiveGB.Controls.Add(this.HexCB);
             this.ReceiveGB.Controls.Add(this.ReceiveClearBTN);
@@ -850,6 +852,21 @@
             this.skinTabPage2.TabItemImage = null;
             this.skinTabPage2.Text = "参数调节";
             // 
+            // TestBTN2
+            // 
+            this.TestBTN2.BackColor = System.Drawing.Color.Transparent;
+            this.TestBTN2.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.TestBTN2.DownBack = null;
+            this.TestBTN2.Location = new System.Drawing.Point(453, 128);
+            this.TestBTN2.MouseBack = null;
+            this.TestBTN2.Name = "TestBTN2";
+            this.TestBTN2.NormlBack = null;
+            this.TestBTN2.Size = new System.Drawing.Size(218, 105);
+            this.TestBTN2.TabIndex = 6;
+            this.TestBTN2.Text = "Test";
+            this.TestBTN2.UseVisualStyleBackColor = false;
+            this.TestBTN2.Click += new System.EventHandler(this.TestBTN2_Click);
+            // 
             // HostComputerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
@@ -933,6 +950,7 @@
         private CCWin.SkinControl.SkinLabel skinLabel4;
         private CCWin.SkinControl.SkinTextBox BestThresholdText;
         private CCWin.SkinControl.SkinLabel skinLabel6;
+        private CCWin.SkinControl.SkinButton TestBTN2;
     }
 }
 
