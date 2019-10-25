@@ -27,6 +27,7 @@ namespace PigCommunication
 
         public List<byte> ReceivedBuff = new List<byte> { };
         public List<byte> DataBag = new List<byte> { };
+        public int DataBagReadIndex = 0;
 
         public DecodingStatus NowDecodingStatus = DecodingStatus.Decoded;
 
@@ -54,9 +55,9 @@ namespace PigCommunication
         {
             while (true)
             {
-                if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
+                List<byte> ReveiceData = new List<byte> { };
+                if (NowDecodingStatus != DecodingStatus.Decoded)
                 {
-                    List<byte> ReveiceData = new List<byte> { };
                     lock (this)
                     {
                         for (int i = 0; i < ReceivedBuff.Count; i++)
@@ -67,8 +68,11 @@ namespace PigCommunication
                     Console.WriteLine("接收字符串：");
                     PrintByteStrWithByteArr(ReveiceData);
                     Console.WriteLine("包头字符串：");
-                    PrintByteStrWithByteArr(BagBeginning.ToList());
+                    PrintByteStrWithByteArr(BagBeginning.ToList());                    
+                }
 
+                if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
+                {
                     #region 检测包头
                     int BagBeginningIndex = FindSonArrayInByteArray(ReveiceData.ToArray(), BagBeginning);
                     if (BagBeginningIndex != -1)
@@ -101,8 +105,8 @@ namespace PigCommunication
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     # endregion
                     # region 检测相应功能的参数信息
-                    int ParaIndex = FunctionIndex + FunctionCheckCodeDic[NowDecodingFunction].Length + 1;
-                    if (ParaIndex + FunctionParaLenghtDic[NowDecodingFunction] > ReveiceData.Count)
+                    int ParaIndex = FunctionIndex + FunctionCheckCodeDic[FTBuff].Length + 1;
+                    if (ParaIndex + FunctionParaLenghtDic[FTBuff] > ReveiceData.Count)
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     switch (NowDecodingFunction)
                     {
@@ -114,7 +118,34 @@ namespace PigCommunication
                             break;
                     }
                     # endregion
+
+                    # region 剩下的数据存入数据缓存区
+                    DataBag.Clear();
+                    int DataBagIndex = ParaIndex + FunctionParaLenghtDic[NowDecodingFunction];
+                    for (int i = DataBagIndex; i < ReveiceData.Count; i++)
+                    {
+                        DataBag.Add(ReveiceData[i]);
+                    }
+                    DataBagReadIndex = ReveiceData.Count - 1;
+                    # endregion
+                    NowDecodingFunction = FTBuff;
                     NowDecodingStatus = DecodingStatus.ReceiveDataBag;
+                }
+                else if (NowDecodingStatus == DecodingStatus.ReceiveDataBag)
+                {
+                    # region 检测数据读取结束（或者包尾）
+                    
+                    # endregion
+                    # region 数据存入数据缓存区
+                    for (int i = DataBagReadIndex; i < ReveiceData.Count; i++)
+                    {
+                        DataBag.Add(ReveiceData[i]);
+                    }
+                    DataBagReadIndex = ReveiceData.Count - 1;
+                    Console.WriteLine("现在的数据包：");
+                    PrintByteStrWithByteArr(DataBag);
+                    # endregion
+                    NowDecodingStatus = DecodingStatus.Decoded;
                 }
             }
         }
