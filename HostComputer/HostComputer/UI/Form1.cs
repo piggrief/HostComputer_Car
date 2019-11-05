@@ -497,6 +497,7 @@ namespace HostComputer
             Console.WriteLine("ImageRenew线程开启");
             while (true)
             {
+                bool IfRefresh = false;
                 lock (this)
                 {
                     if (UsedUARTCommunication.DataBag.Count > 0)
@@ -515,9 +516,12 @@ namespace HostComputer
                                 InitalImagePB.Image = BTBuff;
                             }
                         }
-                        InitalImagePB.Refresh();
+                        UsedUARTCommunication.DataBag.Clear();
+                        IfRefresh = true;
                     }                    
                 }
+                if (IfRefresh)
+                    InitalImagePB.Refresh();
             }
         }
     }
