@@ -252,7 +252,7 @@
             this.skinTabControl1.PageHover = ((System.Drawing.Image)(resources.GetObject("skinTabControl1.PageHover")));
             this.skinTabControl1.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
             this.skinTabControl1.PageNorml = null;
-            this.skinTabControl1.SelectedIndex = 0;
+            this.skinTabControl1.SelectedIndex = 1;
             this.skinTabControl1.Size = new System.Drawing.Size(1005, 623);
             this.skinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.skinTabControl1.TabIndex = 2;
@@ -834,6 +834,7 @@
             this.DealedImage2PB.Location = new System.Drawing.Point(522, 321);
             this.DealedImage2PB.Name = "DealedImage2PB";
             this.DealedImage2PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage2PB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.DealedImage2PB.TabIndex = 2;
             this.DealedImage2PB.TabStop = false;
             // 
@@ -843,6 +844,7 @@
             this.DealedImage1PB.Location = new System.Drawing.Point(3, 321);
             this.DealedImage1PB.Name = "DealedImage1PB";
             this.DealedImage1PB.Size = new System.Drawing.Size(480, 270);
+            this.DealedImage1PB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.DealedImage1PB.TabIndex = 1;
             this.DealedImage1PB.TabStop = false;
             // 

@@ -73,10 +73,57 @@ namespace HostComputer
         /// 图像刷新线程
         /// </summary>
         Thread ImageRefresh;
-
+        /// <summary>
+        /// 图像处理线程
+        /// </summary>
+        Thread ImageDealThread;
+        bool Flag_ImageDeal = false;
         public HostComputerForm()
         {
             InitializeComponent();
+        }
+        public void ImageDeal()
+        {
+            while (true)
+            {
+                if (Flag_ImageDeal)
+                {
+                    Bitmap OImage;
+                    lock (this)
+                    {
+                        OImage = new Bitmap(InitalImagePB.Image);
+                    }
+                    Bitmap GrayImage = IDF.RGBToGray(OImage);
+                    lock (this)
+                    {
+                        DealedImage1PB.Image = GrayImage;
+                        DealedImage1PB.Refresh();
+                    }
+
+                    if (BinaryMethodSelectCB.SelectedIndex == 0)
+                    {
+                        Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage,
+                            Convert.ToUInt16(BinaryThresholdTrackBar.Value));
+                        lock (this)
+                        {
+                            DealedImage2PB.Image = BinaryImage;
+                            //DealedImage2PB.Refresh();
+                        }
+                    }
+                    else if (BinaryMethodSelectCB.SelectedIndex == 1)
+                    {
+                        UInt16 Threshold = IDF.FindThreshold_OTSUNormal(GrayImage, 10);
+                        BestThresholdText.Text = Threshold.ToString();
+                        Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, Convert.ToUInt16(Threshold));
+                        lock (this)
+                        {
+                            DealedImage2PB.Image = BinaryImage;
+                            //DealedImage2PB.Refresh();
+                        }
+                    }
+                    Flag_ImageDeal = false;
+                }                
+            }
         }
         /// <summary>
         /// 测试按钮
@@ -85,26 +132,9 @@ namespace HostComputer
         /// <param name="e"></param>
         private void skinButton1_Click(object sender, EventArgs e)
         {
-            Bitmap OImage = new Bitmap(InitalImagePB.Image);
-            Bitmap GrayImage = IDF.RGBToGray(OImage);
-            DealedImage1PB.Image = GrayImage;
-
-            if (BinaryMethodSelectCB.SelectedIndex == 0)
-            {
-                Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, 
-                    Convert.ToUInt16(BinaryThresholdTrackBar.Value));
-                DealedImage2PB.Image = BinaryImage;
-            }
-            else if (BinaryMethodSelectCB.SelectedIndex == 1)
-            {
-                UInt16 Threshold = IDF.FindThreshold_OTSUNormal(GrayImage, 10);
-                BestThresholdText.Text = Threshold.ToString();
-                Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, Convert.ToUInt16(Threshold));
-                DealedImage2PB.Image = BinaryImage;
-
-
-            }
-
+            ImageDealThread = new Thread(ImageDeal);
+            ImageDealThread.Start();
+            UsedUARTCommunication.DataBagReadFinish = false;
         }
 
         private void skinTrackBar1_Scroll(object sender, EventArgs e)
@@ -116,6 +146,9 @@ namespace HostComputer
         {
             HostComputerForm.CheckForIllegalCrossThreadCalls = false;
             BinaryMethodSelectCB.SelectedIndex = 0;
+
+            skinTabControl1.SelectedIndex = 0;
+
             if (Debugger.IsAttached)
                 AllocConsole();
             UartDataDecoding = new Thread(UsedUARTCommunication.DataDecoding);
@@ -485,8 +518,16 @@ namespace HostComputer
             }
             else
             {
-                ImageRefresh.Abort();
-                ImageRefresh.Join();
+                if (ImageRefresh != null && ImageRefresh.ThreadState != System.Threading.ThreadState.Unstarted)
+                {
+                    ImageRefresh.Abort();
+                    ImageRefresh.Join();                    
+                }
+                if (ImageDealThread != null && ImageDealThread.ThreadState != System.Threading.ThreadState.Unstarted)
+                {
+                    ImageDealThread.Abort();
+                    ImageDealThread.Join();                    
+                }
             }
         }
         /// <summary>
@@ -500,7 +541,7 @@ namespace HostComputer
                 bool IfRefresh = false;
                 lock (this)
                 {
-                    if (UsedUARTCommunication.DataBag.Count > 0)
+                    if (UsedUARTCommunication.DataBag.Count == UsedUARTCommunication.DataBagLength && UsedUARTCommunication.DataBag.Count > 0)
                     {
                         int Width = UsedUARTCommunication.ParaList[1];
                         int Height = UsedUARTCommunication.ParaList[0];
@@ -513,10 +554,12 @@ namespace HostComputer
                                 int Pixel = Convert.ToInt32(UsedUARTCommunication.DataBag[i * Width + j]);
                                 Color GrayPixel = Color.FromArgb(Pixel, Pixel, Pixel);
                                 BTBuff.SetPixel(i, j, GrayPixel);
-                                InitalImagePB.Image = BTBuff;
                             }
                         }
+                        InitalImagePB.Image = BTBuff;
                         UsedUARTCommunication.DataBag.Clear();
+                        UsedUARTCommunication.DataBagReadFinish = false;
+                        Flag_ImageDeal = true;
                         IfRefresh = true;
                     }                    
                 }

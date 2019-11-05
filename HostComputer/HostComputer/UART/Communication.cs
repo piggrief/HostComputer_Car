@@ -47,7 +47,10 @@ namespace PigCommunication
         /// 数据包读取索引(类似游标)
         /// </summary>
         public int DataBagReadIndex = 0;
-
+        /// <summary>
+        /// 数据包读取完毕标志
+        /// </summary>
+        public bool DataBagReadFinish = false;
         public DecodingStatus NowDecodingStatus = DecodingStatus.Decoded;
 
         public FunctionType NowDecodingFunction = FunctionType.CameraSend;
@@ -81,8 +84,8 @@ namespace PigCommunication
                     lock (this)
                         ReceivedBuff.ForEach(k => ReveiceData.Add(k));
                     Console.WriteLine("解包缓存字符串：");
-                    lock (this)
-                        PrintByteStrWithByteArr(ReveiceData);
+                    //lock (this)
+                    //    PrintByteStrWithByteArr(ReveiceData);
                     Console.WriteLine("********数据缓存完毕,进入解包程序********");
                 }
 
@@ -145,7 +148,8 @@ namespace PigCommunication
                     # endregion
                     Console.WriteLine("********检测参数完毕,接受数据开始********");
                     # region 剩下的数据存入数据缓存区
-                    DataBag.Clear();
+                    lock (this)
+                    { DataBag.Clear(); }
                     DataBagReadIndex = ParaIndex + FunctionParaLenghtDic[NowDecodingFunction];
                     
                     # endregion
@@ -154,7 +158,10 @@ namespace PigCommunication
                 }
                 else if (NowDecodingStatus == DecodingStatus.ReceiveDataBag)
                 {
-                    DataReceiveAndCheck(ReveiceData);
+                    lock (this)
+                    {
+                        DataReceiveAndCheck(ReveiceData);
+                    }
                     if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
                         continue;
                     else
@@ -177,22 +184,20 @@ namespace PigCommunication
                 {
                     NowDecodingStatus = DecodingStatus.Check_BagBeginning;
                     Console.WriteLine("数据包全部接受完成，进入包头检测模式!");
-                    Console.WriteLine("数据包：");
-                    PrintByteStrWithByteArr(DataBag);
                     # region 删除前面所有的数据包
-                    lock (this)
-                    {
-                        ReceivedBuff.RemoveRange(0, DataBagReadIndex + DataBagLength);
-                    }                   
+                    //Console.WriteLine("数据包：");
+                    //PrintByteStrWithByteArr(DataBag);
+                    ReceivedBuff.RemoveRange(0, DataBagReadIndex + DataBagLength);                                     
                     # endregion
                     Console.WriteLine("********接受数据完毕,进入包头检测********");
+                    DataBagReadFinish = true;
                     break;
                 }
                 # endregion
             }
             DataBagReadIndex = ReveiceData.Count;
-            Console.WriteLine("现在的数据包：");
-            PrintByteStrWithByteArr(DataBag);
+            //Console.WriteLine("现在的数据包：");
+            //PrintByteStrWithByteArr(DataBag);
             # endregion
         }
         /// <summary>
@@ -299,26 +304,26 @@ namespace PigCommunication
         /// <param name="PrintStr">待打印的字符串</param>
         public void PrintByteStrWithByteArr(List<byte> PrintByteArray)
         {
-            int PrintCount = 0;
-            foreach (byte Byte in PrintByteArray)
-            {
-                int GaoWei = Byte / 16;
-                int DiWei = Byte % 16;
+            //int PrintCount = 0;
+            //foreach (byte Byte in PrintByteArray)
+            //{
+            //    int GaoWei = Byte / 16;
+            //    int DiWei = Byte % 16;
 
-                string ByteStr = IntToHexChar(GaoWei) + IntToHexChar(DiWei);
+            //    string ByteStr = IntToHexChar(GaoWei) + IntToHexChar(DiWei);
 
-                Console.Write(ByteStr + " ");
-                PrintCount++;
-                if (PrintCount > 20)
-                {
-                    Console.WriteLine();
-                    PrintCount = 0;
-                }
-            }
-            if (PrintCount != 0)
-            {
-                Console.WriteLine();                
-            }
+            //    Console.Write(ByteStr + " ");
+            //    PrintCount++;
+            //    if (PrintCount > 20)
+            //    {
+            //        Console.WriteLine();
+            //        PrintCount = 0;
+            //    }
+            //}
+            //if (PrintCount != 0)
+            //{
+            //    Console.WriteLine();                
+            //}
         
         }
 
