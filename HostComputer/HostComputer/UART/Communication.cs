@@ -23,10 +23,29 @@ namespace PigCommunication
 
     public class Communication
     {
-        public byte[] BagBeginning = new byte[] { 0x55, 0xAA };//包头
-
+        /// <summary>
+        /// 包头
+        /// </summary>
+        public byte[] BagBeginning = new byte[] { 0x55, 0xAA };
+        /// <summary>
+        /// 接受缓存区
+        /// </summary>
         public List<byte> ReceivedBuff = new List<byte> { };
+        /// <summary>
+        /// 功能参数列表
+        /// </summary>
+        public List<int> ParaList = new List<int>();
+        /// <summary>
+        /// 数据包总长
+        /// </summary>
+        public int DataBagLength = 0;
+        /// <summary>
+        /// 数据包缓存
+        /// </summary>
         public List<byte> DataBag = new List<byte> { };
+        /// <summary>
+        /// 数据包读取索引(类似游标)
+        /// </summary>
         public int DataBagReadIndex = 0;
 
         public DecodingStatus NowDecodingStatus = DecodingStatus.Decoded;
@@ -58,12 +77,13 @@ namespace PigCommunication
                 List<byte> ReveiceData = new List<byte> { };
                 if (NowDecodingStatus != DecodingStatus.Decoded)
                 {
+                    Console.WriteLine("********解包线程捕捉到非Decoded状态********");
                     lock (this)
                         ReceivedBuff.ForEach(k => ReveiceData.Add(k));
-                    Console.WriteLine("接收字符串：");
-                    PrintByteStrWithByteArr(ReveiceData);
-                    Console.WriteLine("包头字符串：");
-                    PrintByteStrWithByteArr(BagBeginning.ToList());
+                    Console.WriteLine("解包缓存字符串：");
+                    lock (this)
+                        PrintByteStrWithByteArr(ReveiceData);
+                    Console.WriteLine("********数据缓存完毕,进入解包程序********");
                 }
 
                 if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
@@ -75,6 +95,7 @@ namespace PigCommunication
                     else
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     #endregion
+                    Console.WriteLine("********检测包头完毕,进入检测功能********");
                     # region 检测功能号
                     int FunctionIndex = 0;
                     FunctionType FTBuff = FunctionType.CameraSend;
@@ -85,22 +106,25 @@ namespace PigCommunication
                         FunctionIndex = BagBeginningIndex + BagBeginning.Length;
                         int FunctionNum = Convert.ToInt16(ReveiceData[FunctionIndex]);
                         FTBuff = (FunctionType)(FunctionNum);
-                    }
-                    # endregion
-                    #region 检测相应功能号的校验码
-                    if (FunctionIndex + FunctionCheckCodeDic[FTBuff].Length + 1 > ReveiceData.Count)
-                    { NowDecodingStatus = DecodingStatus.Decoded; continue; }
-                    bool CheckCodeMatch = ByteListMatch(ReveiceData, FunctionCheckCodeDic[FTBuff], FunctionIndex + 1);
-                    if (CheckCodeMatch)
-                    {
-                        Console.WriteLine("检测到功能" + FTBuff.ToString());
                         NowDecodingFunction = FTBuff;
                     }
-                    else
-                    { NowDecodingStatus = DecodingStatus.Decoded; continue; }
+                    # endregion
+                    Console.WriteLine("检测到功能：" + NowDecodingFunction.ToString());
+                    Console.WriteLine("********检测功能完毕,进入检测参数********");
+                    #region 检测相应功能号的校验码
+                    //if (FunctionIndex + FunctionCheckCodeDic[FTBuff].Length + 1 > ReveiceData.Count)
+                    //{ NowDecodingStatus = DecodingStatus.Decoded; continue; }
+                    //bool CheckCodeMatch = ByteListMatch(ReveiceData, FunctionCheckCodeDic[FTBuff], FunctionIndex + 1);
+                    //if (CheckCodeMatch)
+                    //{
+                    //    Console.WriteLine("检测到功能" + FTBuff.ToString());
+                    //    NowDecodingFunction = FTBuff;
+                    //}
+                    //else
+                    //{ NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     # endregion
                     # region 检测相应功能的参数信息
-                    int ParaIndex = FunctionIndex + FunctionCheckCodeDic[FTBuff].Length + 1;
+                    int ParaIndex = FunctionIndex + 1;
                     if (ParaIndex + FunctionParaLenghtDic[FTBuff] > ReveiceData.Count)
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     switch (NowDecodingFunction)
@@ -108,41 +132,68 @@ namespace PigCommunication
                         case FunctionType.CameraSend:
                             Console.WriteLine("Height:" + Convert.ToInt16(ReveiceData[ParaIndex]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 1]).ToString());
                             Console.WriteLine("Width:" + Convert.ToInt16(ReveiceData[ParaIndex + 2]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 3]).ToString());
+                            int ImageHeight = Convert.ToInt32(ReveiceData[ParaIndex])* 256 + Convert.ToInt32(ReveiceData[ParaIndex + 1]);
+                            int ImageWidth = Convert.ToInt32(ReveiceData[ParaIndex + 2]) * 256 + Convert.ToInt32(ReveiceData[ParaIndex + 3]);
+                            ParaList.Clear();
+                            ParaList.Add(ImageHeight);
+                            ParaList.Add(ImageWidth);
+                            DataBagLength = ImageHeight * ImageWidth;
                             break;
                         default:
                             break;
                     }
                     # endregion
-
+                    Console.WriteLine("********检测参数完毕,接受数据开始********");
                     # region 剩下的数据存入数据缓存区
                     DataBag.Clear();
-                    int DataBagIndex = ParaIndex + FunctionParaLenghtDic[NowDecodingFunction];
-                    for (int i = DataBagIndex; i < ReveiceData.Count; i++)
-                    {
-                        DataBag.Add(ReveiceData[i]);
-                    }
-                    DataBagReadIndex = ReveiceData.Count - 1;
+                    DataBagReadIndex = ParaIndex + FunctionParaLenghtDic[NowDecodingFunction];
+                    
                     # endregion
                     NowDecodingFunction = FTBuff;
                     NowDecodingStatus = DecodingStatus.ReceiveDataBag;
                 }
                 else if (NowDecodingStatus == DecodingStatus.ReceiveDataBag)
                 {
-                    # region 检测数据读取结束（或者包尾）
-
-                    # endregion
-                    # region 数据存入数据缓存区
-                    for (int i = DataBagReadIndex; i < ReveiceData.Count; i++)
-                    {
-                        DataBag.Add(ReveiceData[i]);
-                    }
-                    DataBagReadIndex = ReveiceData.Count - 1;
-                    Console.WriteLine("现在的数据包：");
-                    PrintByteStrWithByteArr(DataBag);
-                    # endregion
-                    NowDecodingStatus = DecodingStatus.Decoded;
+                    DataReceiveAndCheck(ReveiceData);
+                    if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
+                        continue;
+                    else
+                        NowDecodingStatus = DecodingStatus.Decoded;
                 }
             }
+        }
+        /// <summary>
+        /// 数据包接受状态的数据接收程序
+        /// </summary>
+        /// <param name="ReveiceData">解包缓存数据</param>
+        private void DataReceiveAndCheck(List<byte> ReveiceData)
+        {
+            # region 数据存入数据缓存区
+            for (int i = DataBagReadIndex; i < ReveiceData.Count; i++)
+            {
+                DataBag.Add(ReveiceData[i]);
+                # region 检测数据读取结束（或者包尾）
+                if (DataBag.Count >= DataBagLength && NowDecodingFunction == FunctionType.CameraSend)
+                {
+                    NowDecodingStatus = DecodingStatus.Check_BagBeginning;
+                    Console.WriteLine("数据包全部接受完成，进入包头检测模式!");
+                    Console.WriteLine("数据包：");
+                    PrintByteStrWithByteArr(DataBag);
+                    # region 删除前面所有的数据包
+                    lock (this)
+                    {
+                        ReceivedBuff.RemoveRange(0, DataBagReadIndex + DataBagLength);
+                    }                   
+                    # endregion
+                    Console.WriteLine("********接受数据完毕,进入包头检测********");
+                    break;
+                }
+                # endregion
+            }
+            DataBagReadIndex = ReveiceData.Count;
+            Console.WriteLine("现在的数据包：");
+            PrintByteStrWithByteArr(DataBag);
+            # endregion
         }
         /// <summary>
         /// 串口数据解包程序
@@ -258,7 +309,7 @@ namespace PigCommunication
 
                 Console.Write(ByteStr + " ");
                 PrintCount++;
-                if (PrintCount > 10)
+                if (PrintCount > 20)
                 {
                     Console.WriteLine();
                     PrintCount = 0;

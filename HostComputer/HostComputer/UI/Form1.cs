@@ -69,6 +69,10 @@ namespace HostComputer
         Communication UsedUARTCommunication = new Communication();//通信协议对象
 
         Thread UartDataDecoding;//串口数据解算线程
+        /// <summary>
+        /// 图像刷新线程
+        /// </summary>
+        Thread ImageRefresh;
 
         public HostComputerForm()
         {
@@ -156,31 +160,22 @@ namespace HostComputer
         /// </summary>
         private void UART_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
+            Console.WriteLine("********进入串口线程********");
             byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
             UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);
+            lock (this)
+            {
+                for (int i = 0; i < ReceivedBuff.Length; i++)
+                {
+                    UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
+                }
+            }
             if (UsedUARTCommunication.NowDecodingStatus == DecodingStatus.Decoded)
-            {
-                lock (this)
-                {
-                    for (int i = 0; i < ReceivedBuff.Length; i++)
-                    {
-                        UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
-                    }
-                }
                 UsedUARTCommunication.NowDecodingStatus = DecodingStatus.Check_BagBeginning;
-            }
-            else
-            {
-                lock (this)
-                {
-                    for (int i = 0; i < ReceivedBuff.Length; i++)
-                    {
-                        UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
-                    }
-                }
-            }
+
             if (HexCB.Checked)
             {
+                Console.WriteLine("串口线程接受的数据包：");
                 lock (this)
                 {
                     UsedUARTCommunication.PrintByteStrWithByteArr(UsedUARTCommunication.ReceivedBuff);
@@ -188,6 +183,8 @@ namespace HostComputer
             }
             else
                 Console.WriteLine(System.Text.Encoding.Default.GetString(ReceivedBuff));
+            
+            Console.WriteLine("********退出串口线程********");
         }
         /// <summary>
         /// 用来切换串口接收或者串口不接收
@@ -477,6 +474,51 @@ namespace HostComputer
         {
             
             //Console.WriteLine(Array.IndexOf(DataBag, 0x55).ToString());
+        }
+
+        private void skinTabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (skinTabControl1.SelectedTab == ImagePreDealTP)
+            {
+                ImageRefresh = new Thread(ImageRenew);
+                ImageRefresh.Start();
+            }
+            else
+            {
+                ImageRefresh.Abort();
+                ImageRefresh.Join();
+            }
+        }
+        /// <summary>
+        /// 图像控件更新
+        /// </summary>
+        public void ImageRenew()
+        {
+            Console.WriteLine("ImageRenew线程开启");
+            while (true)
+            {
+                lock (this)
+                {
+                    if (UsedUARTCommunication.DataBag.Count > 0)
+                    {
+                        int Width = UsedUARTCommunication.ParaList[1];
+                        int Height = UsedUARTCommunication.ParaList[0];
+                        Bitmap BTBuff = new Bitmap(Width, Height);
+
+                        for (int i = 0; i < Height; i++)//Height
+                        {
+                            for (int j = 0; j < Width; j++)//Width
+                            {
+                                int Pixel = Convert.ToInt32(UsedUARTCommunication.DataBag[i * Width + j]);
+                                Color GrayPixel = Color.FromArgb(Pixel, Pixel, Pixel);
+                                BTBuff.SetPixel(i, j, GrayPixel);
+                                InitalImagePB.Image = BTBuff;
+                            }
+                        }
+                        InitalImagePB.Refresh();
+                    }                    
+                }
+            }
         }
     }
 }
