@@ -195,9 +195,18 @@ namespace HostComputer
         {
             Console.WriteLine("********进入串口线程********");
             byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
-            UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);
+            UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);          
             lock (this)
             {
+                if (!HexCB.Checked)
+                {
+                    string str1 = Encoding.ASCII.GetString(ReceivedBuff);
+                    ReceiveTB.AppendText(str1);
+                }
+                else
+                {
+                    ReceiveTB.Text = "byte字符串功能我还没写呢！！";
+                }
                 for (int i = 0; i < ReceivedBuff.Length; i++)
                 {
                     UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
@@ -205,7 +214,6 @@ namespace HostComputer
             }
             if (UsedUARTCommunication.NowDecodingStatus == DecodingStatus.Decoded)
                 UsedUARTCommunication.NowDecodingStatus = DecodingStatus.Check_BagBeginning;
-
             if (HexCB.Checked)
             {
                 Console.WriteLine("串口线程接受的数据包：");
