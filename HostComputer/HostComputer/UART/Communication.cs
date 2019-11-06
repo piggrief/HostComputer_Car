@@ -128,6 +128,8 @@ namespace PigCommunication
                     # endregion
                     # region 检测相应功能的参数信息
                     int ParaIndex = FunctionIndex + 1;
+                    if (!FunctionParaLenghtDic.ContainsKey(FTBuff))
+                    { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     if (ParaIndex + FunctionParaLenghtDic[FTBuff] > ReveiceData.Count)
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     switch (NowDecodingFunction)
@@ -199,6 +201,25 @@ namespace PigCommunication
             //Console.WriteLine("现在的数据包：");
             //PrintByteStrWithByteArr(DataBag);
             # endregion
+        }
+        /// <summary>
+        /// 将Byte数组转换成Byte字符串
+        /// </summary>
+        /// <param name="ByteList">Byte列表</param>
+        /// <returns>Byte字符串</returns>
+        public static string ByteArrToStr(byte[] ByteList)
+        {
+            string ByteStr = "";
+            foreach (byte Byte in ByteList)
+            {
+                int GaoWei = Byte / 16;
+                int DiWei = Byte % 16;
+
+                string ByteStrBuff = IntToHexChar(GaoWei) + IntToHexChar(DiWei);
+                ByteStrBuff += " ";
+                ByteStr += ByteStrBuff;
+            }
+            return ByteStr;
         }
         /// <summary>
         /// 将Byte数组以Byte字符串打印出来，如55 AA这样的字符串

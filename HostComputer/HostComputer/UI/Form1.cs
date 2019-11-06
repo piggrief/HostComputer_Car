@@ -200,12 +200,15 @@ namespace HostComputer
             {
                 if (!HexCB.Checked)
                 {
-                    string str1 = Encoding.ASCII.GetString(ReceivedBuff);
+                    string str1 = Encoding.UTF8.GetString(ReceivedBuff);
+                    str1 = str1.Replace("\\r", "\r");
+                    str1 = str1.Replace("\\n", "\n");
                     ReceiveTB.AppendText(str1);
                 }
                 else
                 {
-                    ReceiveTB.Text = "byte字符串功能我还没写呢！！";
+                    string str_byte = Communication.ByteArrToStr(ReceivedBuff);
+                    ReceiveTB.AppendText(str_byte);
                 }
                 for (int i = 0; i < ReceivedBuff.Length; i++)
                 {
@@ -235,13 +238,25 @@ namespace HostComputer
             if (SwitchReceiveBTN.Text == "停止接收")
             {
                 NowUartReceiveStatus = UARTReceiveStatus.DataReceiveFinish;
+                if (UsedUart.SwtichSP(false) == true)//关闭成功
+                {
+                    SwitchReceiveBTN.Text = "开始接收";
+                    NowUartReceiveStatus = UARTReceiveStatus.SerialPortClosed;
+                    NowUartSendStatus = UARTSendStatus.SerialPortClosed;
+                }
+                else
+                {
+                    MessageBox.Show("关闭串口失败！");
+                }
+                return;
             }
             if (NowUartReceiveStatus == UARTReceiveStatus.SerialPortClosed || NowUartSendStatus == UARTSendStatus.SerialPortClosed)
             {
                 //UsedUart.SetSerialPort(PortCB.Text, int.Parse(BaudCB.Text), int.Parse(DataBitsCB.Text), int.Parse(StopBitsCB.Text));
-                UsedUart.sp.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(UART_DataReceived);
                 if (UsedUart.SwtichSP(true) == true)//打开成功
                 {
+                    UsedUart.sp.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(UART_DataReceived);
+
                     NowUartReceiveStatus = UARTReceiveStatus.SerialPortOpen;
                     NowUartSendStatus = UARTSendStatus.SerialPortOpen;
                 }

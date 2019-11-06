@@ -47,7 +47,6 @@
             this.SendClearBTN = new CCWin.SkinControl.SkinButton();
             this.SendBTN = new CCWin.SkinControl.SkinButton();
             this.ReceiveGB = new CCWin.SkinControl.SkinGroupBox();
-            this.TestBTN2 = new CCWin.SkinControl.SkinButton();
             this.ReceiveTB = new System.Windows.Forms.TextBox();
             this.HexCB = new CCWin.SkinControl.SkinCheckBox();
             this.ReceiveClearBTN = new CCWin.SkinControl.SkinButton();
@@ -252,7 +251,7 @@
             this.skinTabControl1.PageHover = ((System.Drawing.Image)(resources.GetObject("skinTabControl1.PageHover")));
             this.skinTabControl1.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
             this.skinTabControl1.PageNorml = null;
-            this.skinTabControl1.SelectedIndex = 1;
+            this.skinTabControl1.SelectedIndex = 0;
             this.skinTabControl1.Size = new System.Drawing.Size(1005, 623);
             this.skinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.skinTabControl1.TabIndex = 2;
@@ -359,7 +358,6 @@
             // 
             this.ReceiveGB.BackColor = System.Drawing.Color.Transparent;
             this.ReceiveGB.BorderColor = System.Drawing.Color.SteelBlue;
-            this.ReceiveGB.Controls.Add(this.TestBTN2);
             this.ReceiveGB.Controls.Add(this.ReceiveTB);
             this.ReceiveGB.Controls.Add(this.HexCB);
             this.ReceiveGB.Controls.Add(this.ReceiveClearBTN);
@@ -379,23 +377,9 @@
             this.ReceiveGB.TitleRectBackColor = System.Drawing.Color.White;
             this.ReceiveGB.TitleRoundStyle = CCWin.SkinClass.RoundStyle.All;
             // 
-            // TestBTN2
-            // 
-            this.TestBTN2.BackColor = System.Drawing.Color.Transparent;
-            this.TestBTN2.ControlState = CCWin.SkinClass.ControlState.Normal;
-            this.TestBTN2.DownBack = null;
-            this.TestBTN2.Location = new System.Drawing.Point(453, 128);
-            this.TestBTN2.MouseBack = null;
-            this.TestBTN2.Name = "TestBTN2";
-            this.TestBTN2.NormlBack = null;
-            this.TestBTN2.Size = new System.Drawing.Size(218, 105);
-            this.TestBTN2.TabIndex = 6;
-            this.TestBTN2.Text = "Test";
-            this.TestBTN2.UseVisualStyleBackColor = false;
-            this.TestBTN2.Click += new System.EventHandler(this.TestBTN2_Click);
-            // 
             // ReceiveTB
             // 
+            this.ReceiveTB.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ReceiveTB.Location = new System.Drawing.Point(6, 33);
             this.ReceiveTB.Multiline = true;
             this.ReceiveTB.Name = "ReceiveTB";
@@ -953,7 +937,6 @@
         private CCWin.SkinControl.SkinLabel skinLabel4;
         private CCWin.SkinControl.SkinTextBox BestThresholdText;
         private CCWin.SkinControl.SkinLabel skinLabel6;
-        private CCWin.SkinControl.SkinButton TestBTN2;
     }
 }
 
