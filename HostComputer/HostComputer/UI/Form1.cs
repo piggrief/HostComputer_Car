@@ -77,6 +77,21 @@ namespace HostComputer
         /// 图像处理线程
         /// </summary>
         Thread ImageDealThread;
+        /// <summary>
+        /// InitalImagePB的互斥锁对象
+        /// </summary>
+        public static readonly object Lock_InitalImagePB = new object();
+        /// <summary>
+        /// DealedImage1PB的互斥锁对象
+        /// </summary>
+        public static readonly object Lock_DealedImage1PB = new object();
+        /// <summary>
+        /// DealedImage2PB的互斥锁对象
+        /// </summary>
+        public static readonly object Lock_DealedImage2PB = new object();
+        /// <summary>
+        /// 图像处理标志，用于控制时序
+        /// </summary>
         bool Flag_ImageDeal = false;
         public HostComputerForm()
         {
@@ -89,37 +104,36 @@ namespace HostComputer
                 if (Flag_ImageDeal)
                 {
                     Bitmap OImage;
-                    lock (this)
-                    {
-                        OImage = new Bitmap(InitalImagePB.Image);
-                    }
+
+                    Monitor.Enter(Lock_InitalImagePB);
+                    OImage = new Bitmap(InitalImagePB.Image);
+                    Monitor.Exit(Lock_InitalImagePB);
+
                     Bitmap GrayImage = IDF.RGBToGray(OImage);
-                    lock (this)
-                    {
-                        DealedImage1PB.Image = GrayImage;
-                        DealedImage1PB.Refresh();
-                    }
+
+                    Monitor.Enter(Lock_DealedImage1PB);
+                    DealedImage1PB.Image = GrayImage;
+                    DealedImage1PB.Refresh();
+                    Monitor.Exit(Lock_DealedImage1PB);
 
                     if (BinaryMethodSelectCB.SelectedIndex == 0)
                     {
                         Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage,
                             Convert.ToUInt16(BinaryThresholdTrackBar.Value));
-                        lock (this)
-                        {
-                            DealedImage2PB.Image = BinaryImage;
-                            //DealedImage2PB.Refresh();
-                        }
+                        
+                        Monitor.Enter(Lock_DealedImage2PB);
+                        DealedImage2PB.Image = BinaryImage;
+                        Monitor.Exit(Lock_DealedImage2PB);
                     }
                     else if (BinaryMethodSelectCB.SelectedIndex == 1)
                     {
                         UInt16 Threshold = IDF.FindThreshold_OTSUNormal(GrayImage, 10);
                         BestThresholdText.Text = Threshold.ToString();
                         Bitmap BinaryImage = IDF.GrayBinary_GlobalThreshold(GrayImage, Convert.ToUInt16(Threshold));
-                        lock (this)
-                        {
-                            DealedImage2PB.Image = BinaryImage;
-                            //DealedImage2PB.Refresh();
-                        }
+                        
+                        Monitor.Enter(Lock_DealedImage2PB);
+                        DealedImage2PB.Image = BinaryImage;
+                        Monitor.Exit(Lock_DealedImage2PB);
                     }
                     Flag_ImageDeal = false;
                 }                
@@ -132,9 +146,16 @@ namespace HostComputer
         /// <param name="e"></param>
         private void skinButton1_Click(object sender, EventArgs e)
         {
-            ImageDealThread = new Thread(ImageDeal);
-            ImageDealThread.Start();
-            UsedUARTCommunication.DataBagReadFinish = false;
+            if (ImageDealThread == null || ImageDealThread.ThreadState == System.Threading.ThreadState.Unstarted)
+            {
+                ImageDealThread = new Thread(ImageDeal);
+                ImageDealThread.Start();
+                UsedUARTCommunication.DataBagReadFinish = false;
+            }
+            else
+            {
+                ImageDealThread.Resume();
+            }
         }
 
         private void skinTrackBar1_Scroll(object sender, EventArgs e)
@@ -153,6 +174,9 @@ namespace HostComputer
                 AllocConsole();
             UartDataDecoding = new Thread(UsedUARTCommunication.DataDecoding);
             UartDataDecoding.Start();
+
+            ImageRefresh = new Thread(ImageRenew);
+            ImageDealThread = new Thread(ImageDeal);
         }
         /// <summary>
         /// 打开串口配置界面
@@ -193,15 +217,25 @@ namespace HostComputer
         /// </summary>
         private void UART_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
-            Console.WriteLine("********进入串口线程********");
+            //Console.WriteLine("********进入串口线程********");
             if (!UsedUart.sp.IsOpen)
                 return;
             byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
             UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);
-
-            if (skinTabControl1.SelectedTab == UART_TabPage)
+            bool Select_UARTTabPage = false;
+            bool HexCBChecked = false;
+            skinTabControl1.Invoke(new EventHandler(delegate
             {
-                if (!HexCB.Checked)
+                Select_UARTTabPage = (skinTabControl1.SelectedTab == UART_TabPage);                
+            }));
+            HexCB.Invoke(new EventHandler(delegate
+            {
+                HexCBChecked = HexCB.Checked;
+            }));
+            
+            if (Select_UARTTabPage)
+            {
+                if (!HexCBChecked)
                 {
                     string str1 = Encoding.UTF8.GetString(ReceivedBuff);
                     str1 = str1.Replace("\\r", "\r");
@@ -230,16 +264,16 @@ namespace HostComputer
                 UsedUARTCommunication.NowDecodingStatus = DecodingStatus.Check_BagBeginning;
             if (HexCB.Checked)
             {
-                Console.WriteLine("串口线程接受的数据包：");
+                //Console.WriteLine("串口线程接受的数据包：");
                 //lock (this)
                 //{
                     //UsedUARTCommunication.PrintByteStrWithByteArr(UsedUARTCommunication.ReceivedBuff);
                 //}
             }
             else
-                Console.WriteLine(System.Text.Encoding.Default.GetString(ReceivedBuff));
+                ;// Console.WriteLine(System.Text.Encoding.Default.GetString(ReceivedBuff));
             
-            Console.WriteLine("********退出串口线程********");
+            //Console.WriteLine("********退出串口线程********");
         }
         /// <summary>
         /// 用来切换串口接收或者串口不接收
@@ -346,7 +380,7 @@ namespace HostComputer
                             //strRecieve += Receivebuff[i];
                         }
 
-                        Console.WriteLine(strRecieve);
+                        //Console.WriteLine(strRecieve);
                         ReceiveTB.AppendText(strRecieve);
                     }
 
@@ -357,7 +391,7 @@ namespace HostComputer
                     strRecieve = UsedUart.sp.ReadExisting();
                     if (strRecieve != "")
                     {
-                        Console.WriteLine(strRecieve);
+                        //Console.WriteLine(strRecieve);
                         ReceiveTB.AppendText(strRecieve);
 
                         if (ReceiveTB.Text.Length >= 10000)
@@ -551,20 +585,27 @@ namespace HostComputer
         {
             if (skinTabControl1.SelectedTab == ImagePreDealTP)
             {
-                ImageRefresh = new Thread(ImageRenew);
-                ImageRefresh.Start();
+                if (ImageRefresh.ThreadState == System.Threading.ThreadState.Unstarted)
+                {
+                    ImageRefresh = new Thread(ImageRenew);
+                    ImageRefresh.Start();
+                }
+                else
+                    ImageRefresh.Resume();
             }
             else
             {
                 if (ImageRefresh != null && ImageRefresh.ThreadState != System.Threading.ThreadState.Unstarted)
                 {
-                    ImageRefresh.Abort();
-                    ImageRefresh.Join();                    
+                    ImageRefresh.Suspend();
+                    //ImageRefresh.Abort();
+                    //ImageRefresh.Join();                    
                 }
                 if (ImageDealThread != null && ImageDealThread.ThreadState != System.Threading.ThreadState.Unstarted)
                 {
-                    ImageDealThread.Abort();
-                    ImageDealThread.Join();                    
+                    ImageDealThread.Suspend();
+                    //ImageDealThread.Abort();
+                    //ImageDealThread.Join();                    
                 }
             }
         }
@@ -598,7 +639,10 @@ namespace HostComputer
                                 BTBuff.SetPixel(i, j, GrayPixel);
                             }
                         }
-                        InitalImagePB.Image = BTBuff;
+                        Monitor.Enter(Lock_InitalImagePB);
+                        InitalImagePB.Image = BTBuff;                            
+                        Monitor.Exit(Lock_InitalImagePB);
+                        
                         UsedUARTCommunication.DataBagReadFinish = false;
                         Flag_ImageDeal = true;
                         IfRefresh = true;
@@ -609,7 +653,11 @@ namespace HostComputer
                     UsedUARTCommunication.RWLock_DataBag.ExitReadLock();
                 }
                 if (IfRefresh)
+                {
+                    Monitor.Enter(Lock_InitalImagePB);
                     InitalImagePB.Refresh();
+                    Monitor.Exit(Lock_InitalImagePB);
+                }
             }
         }
     }

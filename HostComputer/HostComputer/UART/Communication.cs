@@ -24,6 +24,7 @@ namespace PigCommunication
 
     public class Communication
     {
+        public bool OpenDebugOutput = false;
         /// <summary>
         /// 包头
         /// </summary>
@@ -90,7 +91,8 @@ namespace PigCommunication
                 List<byte> ReveiceData = new List<byte> { };
                 if (NowDecodingStatus != DecodingStatus.Decoded)
                 {
-                    Console.WriteLine("********解包线程捕捉到非Decoded状态********");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("********解包线程捕捉到非Decoded状态********");
                     try
                     {
                         RWLock_ReceivedBuff.EnterReadLock();
@@ -100,11 +102,12 @@ namespace PigCommunication
                     {
                         RWLock_ReceivedBuff.ExitReadLock();
                     }
-                        
-                    Console.WriteLine("解包缓存字符串：");
+                    if (OpenDebugOutput)  
+                        Console.WriteLine("解包缓存字符串：");
                     //lock (this)
                     //    PrintByteStrWithByteArr(ReveiceData);
-                    Console.WriteLine("********数据缓存完毕,进入解包程序********");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("********数据缓存完毕,进入解包程序********");
                 }
 
                 if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
@@ -112,11 +115,15 @@ namespace PigCommunication
                     #region 检测包头
                     int BagBeginningIndex = FindSonArrayInByteArray(ReveiceData.ToArray(), BagBeginning);
                     if (BagBeginningIndex != -1)
-                        Console.WriteLine("检测到55 AA的包头！");
+                    {
+                        if (OpenDebugOutput)
+                            Console.WriteLine("检测到55 AA的包头！");
+                    }                   
                     else
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     #endregion
-                    Console.WriteLine("********检测包头完毕,进入检测功能********");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("********检测包头完毕,进入检测功能********");
                     # region 检测功能号
                     int FunctionIndex = 0;
                     FunctionType FTBuff = FunctionType.CameraSend;
@@ -130,8 +137,11 @@ namespace PigCommunication
                         NowDecodingFunction = FTBuff;
                     }
                     # endregion
-                    Console.WriteLine("检测到功能：" + NowDecodingFunction.ToString());
-                    Console.WriteLine("********检测功能完毕,进入检测参数********");
+                    if (OpenDebugOutput)
+                    {
+                        Console.WriteLine("检测到功能：" + NowDecodingFunction.ToString());
+                        Console.WriteLine("********检测功能完毕,进入检测参数********");
+                    }
                     #region 检测相应功能号的校验码
                     //if (FunctionIndex + FunctionCheckCodeDic[FTBuff].Length + 1 > ReveiceData.Count)
                     //{ NowDecodingStatus = DecodingStatus.Decoded; continue; }
@@ -153,8 +163,11 @@ namespace PigCommunication
                     switch (NowDecodingFunction)
                     {
                         case FunctionType.CameraSend:
-                            Console.WriteLine("Height:" + Convert.ToInt16(ReveiceData[ParaIndex]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 1]).ToString());
-                            Console.WriteLine("Width:" + Convert.ToInt16(ReveiceData[ParaIndex + 2]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 3]).ToString());
+                            if (OpenDebugOutput)
+                            {
+                                Console.WriteLine("Height:" + Convert.ToInt16(ReveiceData[ParaIndex]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 1]).ToString());
+                                Console.WriteLine("Width:" + Convert.ToInt16(ReveiceData[ParaIndex + 2]) * 256 + Convert.ToInt16(ReveiceData[ParaIndex + 3]).ToString());
+                            }
                             int ImageHeight = Convert.ToInt32(ReveiceData[ParaIndex])* 256 + Convert.ToInt32(ReveiceData[ParaIndex + 1]);
                             int ImageWidth = Convert.ToInt32(ReveiceData[ParaIndex + 2]) * 256 + Convert.ToInt32(ReveiceData[ParaIndex + 3]);
                             ParaList.Clear();
@@ -166,7 +179,8 @@ namespace PigCommunication
                             break;
                     }
                     # endregion
-                    Console.WriteLine("********检测参数完毕,接受数据开始********");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("********检测参数完毕,接受数据开始********");
                     # region 剩下的数据存入数据缓存区
                     try
                     {
@@ -215,7 +229,8 @@ namespace PigCommunication
                 if (DataBag.Count >= DataBagLength && NowDecodingFunction == FunctionType.CameraSend)
                 {
                     NowDecodingStatus = DecodingStatus.Check_BagBeginning;
-                    Console.WriteLine("数据包全部接受完成，进入包头检测模式!");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("数据包全部接受完成，进入包头检测模式!");
                     # region 删除前面所有的数据包
                     //Console.WriteLine("数据包：");
                     //PrintByteStrWithByteArr(DataBag);
@@ -229,7 +244,8 @@ namespace PigCommunication
                         RWLock_ReceivedBuff.ExitWriteLock();
                     }
                     # endregion
-                    Console.WriteLine("********接受数据完毕,进入包头检测********");
+                    if (OpenDebugOutput)
+                        Console.WriteLine("********接受数据完毕,进入包头检测********");
                     DataBagReadFinish = true;
                     break;
                 }

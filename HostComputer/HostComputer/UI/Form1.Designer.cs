@@ -295,6 +295,7 @@
             // 
             // SendTB
             // 
+            this.SendTB.Font = new System.Drawing.Font("新宋体", 13.8F);
             this.SendTB.Location = new System.Drawing.Point(6, 32);
             this.SendTB.Multiline = true;
             this.SendTB.Name = "SendTB";
