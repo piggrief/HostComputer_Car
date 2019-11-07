@@ -298,7 +298,7 @@
             this.SendTB.Location = new System.Drawing.Point(6, 32);
             this.SendTB.Multiline = true;
             this.SendTB.Name = "SendTB";
-            this.SendTB.Size = new System.Drawing.Size(820, 115);
+            this.SendTB.Size = new System.Drawing.Size(808, 115);
             this.SendTB.TabIndex = 7;
             // 
             // HexSendCB
@@ -379,12 +379,12 @@
             // 
             // ReceiveTB
             // 
-            this.ReceiveTB.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReceiveTB.Font = new System.Drawing.Font("新宋体", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ReceiveTB.Location = new System.Drawing.Point(6, 33);
             this.ReceiveTB.Multiline = true;
             this.ReceiveTB.Name = "ReceiveTB";
             this.ReceiveTB.ReadOnly = true;
-            this.ReceiveTB.Size = new System.Drawing.Size(820, 348);
+            this.ReceiveTB.Size = new System.Drawing.Size(808, 348);
             this.ReceiveTB.TabIndex = 5;
             // 
             // HexCB

@@ -194,20 +194,25 @@ namespace HostComputer
         private void UART_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             Console.WriteLine("********进入串口线程********");
+            if (!UsedUart.sp.IsOpen)
+                return;
             byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
-            UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);          
+            UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);
 
-            if (!HexCB.Checked)
+            if (skinTabControl1.SelectedTab == UART_TabPage)
             {
-                string str1 = Encoding.UTF8.GetString(ReceivedBuff);
-                str1 = str1.Replace("\\r", "\r");
-                str1 = str1.Replace("\\n", "\n");
-                ReceiveTB.AppendText(str1);
-            }
-            else
-            {
-                string str_byte = Communication.ByteArrToStr(ReceivedBuff);
-                ReceiveTB.AppendText(str_byte);
+                if (!HexCB.Checked)
+                {
+                    string str1 = Encoding.UTF8.GetString(ReceivedBuff);
+                    str1 = str1.Replace("\\r", "\r");
+                    str1 = str1.Replace("\\n", "\n");
+                    ReceiveTB.AppendText(str1);
+                }
+                else
+                {
+                    string str_byte = Communication.ByteArrToStr(ReceivedBuff);
+                    ReceiveTB.AppendText(str_byte);
+                }
             }
             try
             {
@@ -249,6 +254,8 @@ namespace HostComputer
                     SwitchReceiveBTN.Text = "开始接收";
                     NowUartReceiveStatus = UARTReceiveStatus.SerialPortClosed;
                     NowUartSendStatus = UARTSendStatus.SerialPortClosed;
+
+                    SaveDataBTN.Enabled = true;
                 }
                 else
                 {
@@ -265,6 +272,8 @@ namespace HostComputer
 
                     NowUartReceiveStatus = UARTReceiveStatus.SerialPortOpen;
                     NowUartSendStatus = UARTSendStatus.SerialPortOpen;
+
+                    SaveDataBTN.Enabled = false;
                 }
                 else
                 {
