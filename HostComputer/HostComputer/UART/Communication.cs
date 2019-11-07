@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PigCommunication
@@ -32,6 +33,10 @@ namespace PigCommunication
         /// </summary>
         public List<byte> ReceivedBuff = new List<byte> { };
         /// <summary>
+        /// ReceivedBuff的读写锁对象
+        /// </summary>
+        public ReaderWriterLockSlim RWLock_ReceivedBuff = new ReaderWriterLockSlim();
+        /// <summary>
         /// 功能参数列表
         /// </summary>
         public List<int> ParaList = new List<int>();
@@ -43,6 +48,11 @@ namespace PigCommunication
         /// 数据包缓存
         /// </summary>
         public List<byte> DataBag = new List<byte> { };
+        /// <summary>
+        /// DataBag的读写锁对象
+        /// </summary>
+        public ReaderWriterLockSlim RWLock_DataBag = new ReaderWriterLockSlim();
+
         /// <summary>
         /// 数据包读取索引(类似游标)
         /// </summary>
@@ -81,8 +91,16 @@ namespace PigCommunication
                 if (NowDecodingStatus != DecodingStatus.Decoded)
                 {
                     Console.WriteLine("********解包线程捕捉到非Decoded状态********");
-                    lock (this)
+                    try
+                    {
+                        RWLock_ReceivedBuff.EnterReadLock();
                         ReceivedBuff.ForEach(k => ReveiceData.Add(k));
+                    }
+                    finally
+                    {
+                        RWLock_ReceivedBuff.ExitReadLock();
+                    }
+                        
                     Console.WriteLine("解包缓存字符串：");
                     //lock (this)
                     //    PrintByteStrWithByteArr(ReveiceData);
@@ -150,8 +168,15 @@ namespace PigCommunication
                     # endregion
                     Console.WriteLine("********检测参数完毕,接受数据开始********");
                     # region 剩下的数据存入数据缓存区
-                    lock (this)
-                    { DataBag.Clear(); }
+                    try
+                    {
+                        RWLock_DataBag.EnterWriteLock();
+                        DataBag.Clear();
+                    }
+                    finally
+                    {
+                        RWLock_DataBag.ExitWriteLock();
+                    }
                     DataBagReadIndex = ParaIndex + FunctionParaLenghtDic[NowDecodingFunction];
                     
                     # endregion
@@ -160,9 +185,14 @@ namespace PigCommunication
                 }
                 else if (NowDecodingStatus == DecodingStatus.ReceiveDataBag)
                 {
-                    lock (this)
+                    try
                     {
+                        RWLock_DataBag.EnterWriteLock();
                         DataReceiveAndCheck(ReveiceData);
+                    }
+                    finally
+                    {
+                        RWLock_DataBag.ExitWriteLock();
                     }
                     if (NowDecodingStatus == DecodingStatus.Check_BagBeginning)
                         continue;
@@ -189,7 +219,15 @@ namespace PigCommunication
                     # region 删除前面所有的数据包
                     //Console.WriteLine("数据包：");
                     //PrintByteStrWithByteArr(DataBag);
-                    ReceivedBuff.RemoveRange(0, DataBagReadIndex + DataBagLength);                                     
+                    try
+                    {
+                        RWLock_ReceivedBuff.EnterWriteLock();
+                        ReceivedBuff.RemoveRange(0, DataBagReadIndex + DataBagLength);
+                    }
+                    finally
+                    {
+                        RWLock_ReceivedBuff.ExitWriteLock();
+                    }
                     # endregion
                     Console.WriteLine("********接受数据完毕,进入包头检测********");
                     DataBagReadFinish = true;

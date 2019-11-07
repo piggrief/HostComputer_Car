@@ -196,34 +196,40 @@ namespace HostComputer
             Console.WriteLine("********进入串口线程********");
             byte[] ReceivedBuff = new byte[UsedUart.sp.BytesToRead];
             UsedUart.sp.Read(ReceivedBuff, 0, ReceivedBuff.Length);          
-            lock (this)
+
+            if (!HexCB.Checked)
             {
-                if (!HexCB.Checked)
-                {
-                    string str1 = Encoding.UTF8.GetString(ReceivedBuff);
-                    str1 = str1.Replace("\\r", "\r");
-                    str1 = str1.Replace("\\n", "\n");
-                    ReceiveTB.AppendText(str1);
-                }
-                else
-                {
-                    string str_byte = Communication.ByteArrToStr(ReceivedBuff);
-                    ReceiveTB.AppendText(str_byte);
-                }
-                for (int i = 0; i < ReceivedBuff.Length; i++)
-                {
-                    UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
-                }
+                string str1 = Encoding.UTF8.GetString(ReceivedBuff);
+                str1 = str1.Replace("\\r", "\r");
+                str1 = str1.Replace("\\n", "\n");
+                ReceiveTB.AppendText(str1);
             }
+            else
+            {
+                string str_byte = Communication.ByteArrToStr(ReceivedBuff);
+                ReceiveTB.AppendText(str_byte);
+            }
+            try
+            {
+                UsedUARTCommunication.RWLock_ReceivedBuff.EnterWriteLock();
+                
+                for (int i = 0; i < ReceivedBuff.Length; i++)
+                    UsedUARTCommunication.ReceivedBuff.Add(ReceivedBuff[i]);
+            }
+            finally
+            {
+                UsedUARTCommunication.RWLock_ReceivedBuff.ExitWriteLock();
+            }
+
             if (UsedUARTCommunication.NowDecodingStatus == DecodingStatus.Decoded)
                 UsedUARTCommunication.NowDecodingStatus = DecodingStatus.Check_BagBeginning;
             if (HexCB.Checked)
             {
                 Console.WriteLine("串口线程接受的数据包：");
-                lock (this)
-                {
-                    UsedUARTCommunication.PrintByteStrWithByteArr(UsedUARTCommunication.ReceivedBuff);
-                }
+                //lock (this)
+                //{
+                    //UsedUARTCommunication.PrintByteStrWithByteArr(UsedUARTCommunication.ReceivedBuff);
+                //}
             }
             else
                 Console.WriteLine(System.Text.Encoding.Default.GetString(ReceivedBuff));
@@ -562,9 +568,12 @@ namespace HostComputer
             while (true)
             {
                 bool IfRefresh = false;
-                lock (this)
+
+                try
                 {
-                    if (UsedUARTCommunication.DataBag.Count == UsedUARTCommunication.DataBagLength && UsedUARTCommunication.DataBag.Count > 0)
+                    UsedUARTCommunication.RWLock_DataBag.EnterReadLock();
+                    if (UsedUARTCommunication.DataBag.Count == UsedUARTCommunication.DataBagLength && 
+                        UsedUARTCommunication.DataBag.Count > 0)
                     {
                         int Width = UsedUARTCommunication.ParaList[1];
                         int Height = UsedUARTCommunication.ParaList[0];
@@ -574,17 +583,21 @@ namespace HostComputer
                         {
                             for (int j = 0; j < Width; j++)//Width
                             {
-                                int Pixel = Convert.ToInt32(UsedUARTCommunication.DataBag[i * Width + j]);
+                                int Pixel = Convert.ToInt32(
+                                    UsedUARTCommunication.DataBag[i * Width + j]);
                                 Color GrayPixel = Color.FromArgb(Pixel, Pixel, Pixel);
                                 BTBuff.SetPixel(i, j, GrayPixel);
                             }
                         }
                         InitalImagePB.Image = BTBuff;
-                        UsedUARTCommunication.DataBag.Clear();
                         UsedUARTCommunication.DataBagReadFinish = false;
                         Flag_ImageDeal = true;
                         IfRefresh = true;
-                    }                    
+                    }
+                }
+                finally
+                {
+                    UsedUARTCommunication.RWLock_DataBag.ExitReadLock();
                 }
                 if (IfRefresh)
                     InitalImagePB.Refresh();
