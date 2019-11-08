@@ -30,6 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostComputerForm));
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series13 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series14 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series15 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series16 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.skinMenuStrip1 = new CCWin.SkinControl.SkinMenuStrip();
             this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UARTConfigMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,7 +77,11 @@
             this.DealedImage2PB = new CCWin.SkinControl.SkinPictureBox();
             this.DealedImage1PB = new CCWin.SkinControl.SkinPictureBox();
             this.InitalImagePB = new CCWin.SkinControl.SkinPictureBox();
-            this.skinTabPage2 = new CCWin.SkinControl.SkinTabPage();
+            this.ParaSetTabPage = new CCWin.SkinControl.SkinTabPage();
+            this.ScopeTabPage = new CCWin.SkinControl.SkinTabPage();
+            this.ScopeChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.ScopeMenuStrip = new CCWin.SkinControl.SkinContextMenuStrip();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.skinMenuStrip1.SuspendLayout();
             this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
@@ -85,6 +95,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).BeginInit();
+            this.ScopeTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ScopeChart)).BeginInit();
+            this.ScopeMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // skinMenuStrip1
@@ -237,7 +250,8 @@
             this.skinTabControl1.CloseRect = new System.Drawing.Rectangle(2, 2, 12, 12);
             this.skinTabControl1.Controls.Add(this.UART_TabPage);
             this.skinTabControl1.Controls.Add(this.ImagePreDealTP);
-            this.skinTabControl1.Controls.Add(this.skinTabPage2);
+            this.skinTabControl1.Controls.Add(this.ScopeTabPage);
+            this.skinTabControl1.Controls.Add(this.ParaSetTabPage);
             this.skinTabControl1.HeadBack = null;
             this.skinTabControl1.ImgTxtOffset = new System.Drawing.Point(0, 0);
             this.skinTabControl1.ItemSize = new System.Drawing.Size(70, 36);
@@ -251,7 +265,7 @@
             this.skinTabControl1.PageHover = ((System.Drawing.Image)(resources.GetObject("skinTabControl1.PageHover")));
             this.skinTabControl1.PageImagePosition = CCWin.SkinControl.SkinTabControl.ePageImagePosition.Left;
             this.skinTabControl1.PageNorml = null;
-            this.skinTabControl1.SelectedIndex = 0;
+            this.skinTabControl1.SelectedIndex = 3;
             this.skinTabControl1.Size = new System.Drawing.Size(1005, 623);
             this.skinTabControl1.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.skinTabControl1.TabIndex = 2;
@@ -844,16 +858,96 @@
             this.InitalImagePB.TabIndex = 0;
             this.InitalImagePB.TabStop = false;
             // 
-            // skinTabPage2
+            // ParaSetTabPage
             // 
-            this.skinTabPage2.BackColor = System.Drawing.Color.White;
-            this.skinTabPage2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.skinTabPage2.Location = new System.Drawing.Point(0, 36);
-            this.skinTabPage2.Name = "skinTabPage2";
-            this.skinTabPage2.Size = new System.Drawing.Size(1005, 587);
-            this.skinTabPage2.TabIndex = 2;
-            this.skinTabPage2.TabItemImage = null;
-            this.skinTabPage2.Text = "参数调节";
+            this.ParaSetTabPage.BackColor = System.Drawing.Color.White;
+            this.ParaSetTabPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ParaSetTabPage.Location = new System.Drawing.Point(0, 36);
+            this.ParaSetTabPage.Name = "ParaSetTabPage";
+            this.ParaSetTabPage.Size = new System.Drawing.Size(1005, 587);
+            this.ParaSetTabPage.TabIndex = 2;
+            this.ParaSetTabPage.TabItemImage = null;
+            this.ParaSetTabPage.Text = "参数调节";
+            // 
+            // ScopeTabPage
+            // 
+            this.ScopeTabPage.BackColor = System.Drawing.Color.White;
+            this.ScopeTabPage.Controls.Add(this.ScopeChart);
+            this.ScopeTabPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ScopeTabPage.Location = new System.Drawing.Point(0, 36);
+            this.ScopeTabPage.Name = "ScopeTabPage";
+            this.ScopeTabPage.Size = new System.Drawing.Size(1005, 587);
+            this.ScopeTabPage.TabIndex = 3;
+            this.ScopeTabPage.TabItemImage = null;
+            this.ScopeTabPage.Text = "虚拟示波器";
+            // 
+            // ScopeChart
+            // 
+            chartArea4.Name = "ChartArea1";
+            this.ScopeChart.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.ScopeChart.Legends.Add(legend4);
+            this.ScopeChart.Location = new System.Drawing.Point(0, 0);
+            this.ScopeChart.Name = "ScopeChart";
+            series13.ChartArea = "ChartArea1";
+            series13.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series13.Legend = "Legend1";
+            series13.Name = "Series1";
+            series14.ChartArea = "ChartArea1";
+            series14.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series14.Legend = "Legend1";
+            series14.Name = "Series2";
+            series15.ChartArea = "ChartArea1";
+            series15.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series15.Legend = "Legend1";
+            series15.Name = "Series3";
+            series16.ChartArea = "ChartArea1";
+            series16.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series16.Legend = "Legend1";
+            series16.Name = "Series4";
+            this.ScopeChart.Series.Add(series13);
+            this.ScopeChart.Series.Add(series14);
+            this.ScopeChart.Series.Add(series15);
+            this.ScopeChart.Series.Add(series16);
+            this.ScopeChart.Size = new System.Drawing.Size(1005, 448);
+            this.ScopeChart.TabIndex = 0;
+            this.ScopeChart.Text = "chart1";
+            this.ScopeChart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ScopeChart_MouseClick);
+            // 
+            // ScopeMenuStrip
+            // 
+            this.ScopeMenuStrip.Arrow = System.Drawing.Color.Black;
+            this.ScopeMenuStrip.Back = System.Drawing.Color.White;
+            this.ScopeMenuStrip.BackRadius = 4;
+            this.ScopeMenuStrip.Base = System.Drawing.Color.FromArgb(((int)(((byte)(105)))), ((int)(((byte)(200)))), ((int)(((byte)(254)))));
+            this.ScopeMenuStrip.DropDownImageSeparator = System.Drawing.Color.FromArgb(((int)(((byte)(197)))), ((int)(((byte)(197)))), ((int)(((byte)(197)))));
+            this.ScopeMenuStrip.Fore = System.Drawing.Color.Black;
+            this.ScopeMenuStrip.HoverFore = System.Drawing.Color.White;
+            this.ScopeMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.ScopeMenuStrip.ItemAnamorphosis = true;
+            this.ScopeMenuStrip.ItemBorder = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.ScopeMenuStrip.ItemBorderShow = true;
+            this.ScopeMenuStrip.ItemHover = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.ScopeMenuStrip.ItemPressed = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.ScopeMenuStrip.ItemRadius = 4;
+            this.ScopeMenuStrip.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            this.ScopeMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1});
+            this.ScopeMenuStrip.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
+            this.ScopeMenuStrip.Name = "ScopeMenuStrip";
+            this.ScopeMenuStrip.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            this.ScopeMenuStrip.Size = new System.Drawing.Size(176, 56);
+            this.ScopeMenuStrip.SkinAllColor = true;
+            this.ScopeMenuStrip.TitleAnamorphosis = true;
+            this.ScopeMenuStrip.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
+            this.ScopeMenuStrip.TitleRadius = 4;
+            this.ScopeMenuStrip.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(175, 24);
+            this.toolStripMenuItem1.Text = "缩放至适合";
             // 
             // HostComputerForm
             // 
@@ -889,6 +983,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage2PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DealedImage1PB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InitalImagePB)).EndInit();
+            this.ScopeTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ScopeChart)).EndInit();
+            this.ScopeMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -929,7 +1026,7 @@
         private CCWin.SkinControl.SkinButton ReceiveClearBTN;
         private CCWin.SkinControl.SkinButton SaveDataBTN;
         private CCWin.SkinControl.SkinButton SwitchReceiveBTN;
-        private CCWin.SkinControl.SkinTabPage skinTabPage2;
+        private CCWin.SkinControl.SkinTabPage ParaSetTabPage;
         private CCWin.SkinControl.SkinTextBox ThresholdIntervalText;
         private CCWin.SkinControl.SkinTextBox ReduceRateText;
         private CCWin.SkinControl.SkinLabel skinLabel3;
@@ -938,6 +1035,10 @@
         private CCWin.SkinControl.SkinLabel skinLabel4;
         private CCWin.SkinControl.SkinTextBox BestThresholdText;
         private CCWin.SkinControl.SkinLabel skinLabel6;
+        private CCWin.SkinControl.SkinTabPage ScopeTabPage;
+        private System.Windows.Forms.DataVisualization.Charting.Chart ScopeChart;
+        private CCWin.SkinControl.SkinContextMenuStrip ScopeMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 

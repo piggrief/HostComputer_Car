@@ -20,11 +20,18 @@ namespace PigCommunication
     public enum FunctionType
     {
         CameraSend = 0,
+        Oscilloscope = 0x10
     }
-
+    /// <summary>
+    /// 虚拟示波器数据类型
+    /// </summary>
+    public enum DataType_t
+    {
+        float_dt = 0
+    }
     public class Communication
     {
-        public bool OpenDebugOutput = false;
+        public bool OpenDebugOutput = true;
         /// <summary>
         /// 包头
         /// </summary>
@@ -68,6 +75,8 @@ namespace PigCommunication
 
         public Dictionary<FunctionType, byte[]> FunctionCheckCodeDic = new Dictionary<FunctionType, byte[]>();
         public Dictionary<FunctionType, int> FunctionParaLenghtDic = new Dictionary<FunctionType, int>();
+        public Dictionary<DataType_t, int> DataTypeSizeDic = new Dictionary<DataType_t, int>();
+
         public Communication()
         { SomeDicInit(); }
         /// <summary>
@@ -77,6 +86,9 @@ namespace PigCommunication
         {
             FunctionCheckCodeDic.Add(FunctionType.CameraSend, new byte[] { 0xFF, 0x00 });
             FunctionParaLenghtDic.Add(FunctionType.CameraSend, 4);
+            FunctionParaLenghtDic.Add(FunctionType.Oscilloscope, 2);
+
+            DataTypeSizeDic.Add(DataType_t.float_dt, 4);
 
         }
         /// <summary>
@@ -175,6 +187,20 @@ namespace PigCommunication
                             ParaList.Add(ImageWidth);
                             DataBagLength = ImageHeight * ImageWidth;
                             break;
+                        case FunctionType.Oscilloscope:
+                            int DataChannelNum = Convert.ToInt32(ReveiceData[ParaIndex]);
+                            int DataType = Convert.ToInt32(ReveiceData[ParaIndex + 1]);
+                            if (OpenDebugOutput)
+                            {
+                                Console.WriteLine("数据通道数:" + DataChannelNum.ToString());
+                                Console.WriteLine("数据类型:" + DataType.ToString());
+                            }
+                            ParaList.Clear();
+                            ParaList.Add(DataChannelNum);
+                            ParaList.Add(DataType);
+                            DataType_t DataTypeBuff = (DataType_t)(DataType);
+                            DataBagLength = DataChannelNum * DataTypeSizeDic[DataTypeBuff];
+                            break;
                         default:
                             break;
                     }
@@ -226,14 +252,14 @@ namespace PigCommunication
             {
                 DataBag.Add(ReveiceData[i]);
                 # region 检测数据读取结束（或者包尾）
-                if (DataBag.Count >= DataBagLength && NowDecodingFunction == FunctionType.CameraSend)
+                if (DataBag.Count >= DataBagLength)// && NowDecodingFunction == FunctionType.CameraSend)
                 {
                     NowDecodingStatus = DecodingStatus.Check_BagBeginning;
                     if (OpenDebugOutput)
                         Console.WriteLine("数据包全部接受完成，进入包头检测模式!");
                     # region 删除前面所有的数据包
                     //Console.WriteLine("数据包：");
-                    //PrintByteStrWithByteArr(DataBag);
+                    PrintByteStrWithByteArr(DataBag);
                     try
                     {
                         RWLock_ReceivedBuff.EnterWriteLock();
@@ -281,26 +307,26 @@ namespace PigCommunication
         /// <param name="PrintStr">待打印的字符串</param>
         public void PrintByteStrWithByteArr(List<byte> PrintByteArray)
         {
-            //int PrintCount = 0;
-            //foreach (byte Byte in PrintByteArray)
-            //{
-            //    int GaoWei = Byte / 16;
-            //    int DiWei = Byte % 16;
+            int PrintCount = 0;
+            foreach (byte Byte in PrintByteArray)
+            {
+                int GaoWei = Byte / 16;
+                int DiWei = Byte % 16;
 
-            //    string ByteStr = IntToHexChar(GaoWei) + IntToHexChar(DiWei);
+                string ByteStr = IntToHexChar(GaoWei) + IntToHexChar(DiWei);
 
-            //    Console.Write(ByteStr + " ");
-            //    PrintCount++;
-            //    if (PrintCount > 20)
-            //    {
-            //        Console.WriteLine();
-            //        PrintCount = 0;
-            //    }
-            //}
-            //if (PrintCount != 0)
-            //{
-            //    Console.WriteLine();                
-            //}
+                Console.Write(ByteStr + " ");
+                PrintCount++;
+                if (PrintCount > 20)
+                {
+                    Console.WriteLine();
+                    PrintCount = 0;
+                }
+            }
+            if (PrintCount != 0)
+            {
+                Console.WriteLine();
+            }
         
         }
 

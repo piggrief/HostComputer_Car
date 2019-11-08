@@ -660,5 +660,13 @@ namespace HostComputer
                 }
             }
         }
+
+        private void ScopeChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                ScopeMenuStrip.Show(MousePosition.X, MousePosition.Y);
+            }
+        }
     }
 }
