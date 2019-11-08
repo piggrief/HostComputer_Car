@@ -2,8 +2,47 @@
 # include <cmath>
 # include <stdio.h>
 # include "jpeg.h"
+# include <time.h>
 using namespace std;
+# include <windows.h>
 # define Image_Size 8
+
+class MyTimer
+{
+private:
+    int _freq;
+    LARGE_INTEGER _begin;
+    LARGE_INTEGER _end;
+
+public:
+    long costTime;            // 花费的时间(精确到微秒)
+
+public:
+    MyTimer()
+    {
+        LARGE_INTEGER tmp;
+        QueryPerformanceFrequency(&tmp);//QueryPerformanceFrequency()作用：返回硬件支持的高精度计数器的频率。
+
+        _freq = tmp.QuadPart;
+        costTime = 0;
+    }
+
+    void Start()            // 开始计时
+    {
+        QueryPerformanceCounter(&_begin);//获得初始值
+    }
+
+    void End()                // 结束计时
+    {
+        QueryPerformanceCounter(&_end);//获得终止值
+        costTime = (long)((_end.QuadPart - _begin.QuadPart) * 1000000 / _freq);
+    }
+
+    void Reset()            // 计时清0
+    {
+        costTime = 0;
+    }
+};
 
 double image[Image_Size][Image_Size] =
 { { 46, 47, 52, 56, 57, 57, 52, 48 },
@@ -18,7 +57,22 @@ double image[Image_Size][Image_Size] =
 int main()
 {
     cout << "8x8分量Jpeg压缩" << endl;
-
+    MyTimer mt, mt_base;
+    # pragma region 计算基准时间
+    unsigned char TestArr[120][188] = { 0 };
+    unsigned char TestArr2[120][188] = { 0 };
+    mt_base.Start();
+    for (size_t i = 0; i < 120; i++)
+    {
+        for (size_t j = 0; j < 188; j++)
+        {
+            TestArr2[i][j] = TestArr[i][j];
+        }      
+    }
+    mt_base.End();
+    cout << "基准时间：" << mt_base.costTime << "us" << endl;
+    # pragma endregion
+    clock_t start_time = clock();
     # pragma region 压缩编码
     const double PI = acos(-1);
 
@@ -48,7 +102,7 @@ int main()
         }
         cout << endl;
     }
-
+    mt.Start();
     //由公式计算DCT变化后的系数矩阵
     for (int u = 0; u<Image_Size; u++){
         for (int v = 0; v<Image_Size; v++){
@@ -61,6 +115,8 @@ int main()
             F[u][v] = 1.0 / 4 * (u == 0 ? 1.0 / sqrt(2) : 1)*(v == 0 ? 1.0 / sqrt(2) : 1)*temp;
         }
     }
+    mt.End();
+    cout << "DCT压缩用时（相对时间）" << mt.costTime / (double)(mt_base.costTime) << "ms" << endl;
 
     /*输出—DCT变化后的系数矩阵*/
     //DCT变化后的系数矩阵
@@ -74,9 +130,9 @@ int main()
     }
 
     //利用公式将DCT变化后的系数矩阵转换为规格化量化系数矩阵 
-    int F_[N][N];//规格化量化系数矩阵 
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){//二维数组Q 为亮度量化值表 
+    int F_[Image_N][Image_N];//规格化量化系数矩阵 
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){//二维数组Q 为亮度量化值表 
             F_[i][j] = (int)((F[i][j] / brightnessQuantizedValueTable.Q[i][j])>0.0) ? floor((F[i][j] / brightnessQuantizedValueTable.Q[i][j]) + 0.5) : ceil((F[i][j] / brightnessQuantizedValueTable.Q[i][j]) - 0.5);//进行量化，然后进行四舍五入 
         }
     }
@@ -84,8 +140,8 @@ int main()
     /*输出—规格化量化系数矩阵*/
     //规格化量化系数矩阵 
     cout << "规格化量化系数:" << endl;
-    for (int u = 0; u<N; u++){
-        for (int v = 0; v<N; v++){
+    for (int u = 0; u<Image_N; u++){
+        for (int v = 0; v<Image_N; v++){
             cout << F_[u][v] << "\t";
         }
         cout << endl;
@@ -164,7 +220,7 @@ int main()
     cout << Itemp1 << "\t" << Itemp << endl;
 
     //将AC系数熵编码的编码转换为中间符号
-    AC_EntropyCoding_MiddleSymbol Iac_EntropyCoding_MiddleSymbol[N*N];
+    AC_EntropyCoding_MiddleSymbol Iac_EntropyCoding_MiddleSymbol[Image_N*Image_N];
     //遍历所有的AC系数熵编码的编码对strTemp1进行反向查找亮度AC码表得到R_S
     for (int i = 0; i<index; i++){
         for (int u = 0; u<stringMapList.partNum; u++){
@@ -195,11 +251,11 @@ int main()
     }
 
     //规格化量化系数 
-    int IF_[N][N];
+    int IF_[Image_N][Image_N];
 
     //初始化矩阵 
-    for (int u = 0; u<N; u++){
-        for (int v = 0; v<N; v++){
+    for (int u = 0; u<Image_N; u++){
+        for (int v = 0; v<Image_N; v++){
             IF_[u][v] = 0;
         }
     }
@@ -223,7 +279,7 @@ int main()
         while (Iac_EntropyCoding_MiddleSymbol[h].R_S != "0/0(EOB)"){
             //根据查找规律发现，当行+列为奇数时向左下方向，当行+列为偶数时为右上方向 
             if ((a + b) % 2 == 0){//偶数，向右上方向 
-                for (; count >= 0 && a >= 0 && b<N; a--, b++){
+                for (; count >= 0 && a >= 0 && b<Image_N; a--, b++){
                     if (count == 0){//此时放temp 
                         IF_[a][b] = Iac_EntropyCoding_MiddleSymbol[h].temp;
                         count--;
@@ -238,14 +294,14 @@ int main()
                     a--;
                     b++;
                 }
-                if (a<0 && b >= N){//当出现正中间往上时，挪回正规  
+                if (a<0 && b >= Image_N){//当出现正中间往上时，挪回正规  
                     b--;
                     a = a + 2;
                 }
                 else if (a<0){//当出现往上突出时，挪回正规
                     a++;
                 }
-                else if (b >= N){//当出现往右突出时，挪回正规 
+                else if (b >= Image_N){//当出现往右突出时，挪回正规 
                     b--;
                     a = a + 2;
                 }
@@ -254,7 +310,7 @@ int main()
                 }
             }
             else{//奇数，向左下方向 
-                for (; count >= 0 && a<N&&b >= 0; a++, b--){
+                for (; count >= 0 && a<Image_N&&b >= 0; a++, b--){
                     if (count == 0){//此时放temp 
                         IF_[a][b] = Iac_EntropyCoding_MiddleSymbol[h].temp;
                         count--;
@@ -269,11 +325,11 @@ int main()
                     a++;
                     b--;
                 }
-                if (a >= N&&b<0){//当出现正中间往下时，挪回正规 
+                if (a >= Image_N&&b<0){//当出现正中间往下时，挪回正规 
                     a--;
                     b = b + 2;
                 }
-                else if (a >= N){//当出现往下突出时，挪回正规 
+                else if (a >= Image_N){//当出现往下突出时，挪回正规 
                     a--;
                     b = b + 2;
                 }
@@ -290,8 +346,8 @@ int main()
     /*输出—规格化量化系数矩阵*/
     //规格化量化系数矩阵 
     cout << "规格化量化系数:" << endl;
-    for (int u = 0; u<N; u++){
-        for (int v = 0; v<N; v++){
+    for (int u = 0; u<Image_N; u++){
+        for (int v = 0; v<Image_N; v++){
             cout << IF_[u][v] << "\t";
         }
         cout << endl;
@@ -299,29 +355,29 @@ int main()
 
 
     //利用公式将规格化量化系数矩阵转换为逆量化后的系数矩阵  
-    double IF[N][N];//逆量化后的系数矩阵
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){//二维数组Q 为亮度量化值表
+    double IF[Image_N][Image_N];//逆量化后的系数矩阵
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){//二维数组Q 为亮度量化值表
             IF[i][j] = 1.0*IF_[i][j] * brightnessQuantizedValueTable.Q[i][j];
         }
     }
 
     /*输出—逆量化后的系数矩阵*/
     cout << "逆量化后的系数矩阵:" << endl;
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             cout << IF[i][j] << "\t";
         }
         cout << endl;
     }
 
     //由公式计算IDCT变化后的系数矩阵
-    double Iff[N][N];
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    double Iff[Image_N][Image_N];
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             double sum = 0.0;
-            for (int u = 0; u<N; u++){
-                for (int v = 0; v<N; v++){
+            for (int u = 0; u<Image_N; u++){
+                for (int v = 0; v<Image_N; v++){
                     sum = sum + (u == 0 ? 1.0 / sqrt(2.0) : 1.0)*(v == 0 ? 1.0 / sqrt(2.0) : 1.0)*IF[u][v] * cos((2 * i + 1)*u*PI*1.0 / 16)*cos((2 * j + 1)*v*PI*1.0 / 16);
                 }
             }
@@ -331,8 +387,8 @@ int main()
 
     /*输出—IDCT变化后的系数矩阵*/
     cout << "IDCT变化后的系数矩阵:" << endl;
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             //cout<<Iff[i][j]<<"\t";
             printf("%.0f\t", Iff[i][j]);
         }
@@ -342,16 +398,16 @@ int main()
 
     cout << "源图像的一个分量样本的重构图像：" << endl;
     /*IDCT变化后的系数矩阵+128后变成源图像的一个分量样本的重构图像*/
-    double If[N][N];
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    double If[Image_N][Image_N];
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             If[i][j] = Iff[i][j] + 128;
         }
     }
 
     /*输出—源图像的一个分量样本的重构图像*/
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             //cout<<If[i][j]<<"\t";
             printf("%.0f\t", If[i][j]);
         }

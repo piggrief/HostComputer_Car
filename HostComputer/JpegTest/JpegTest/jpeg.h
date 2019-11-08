@@ -1,16 +1,16 @@
 # pragma once 
 # include <string>
 #define MAX 100
-#define N 8 	//N为每个图像分量的矩阵大小
+#define Image_N 8 	//Image_N为每个图像分量的矩阵大小
 
 using jpeg_string_t = std::string;
 
 /*亮度量化值表*/
 class  BrightnessQuantizedValueTable{
 public:
-    int Q[N][N];
+    int Q[Image_N][Image_N];
     BrightnessQuantizedValueTable(){
-        int x[N][N] = { 16, 11, 10, 16, 24, 40, 51, 61,
+        int x[Image_N][Image_N] = { 16, 11, 10, 16, 24, 40, 51, 61,
             12, 12, 14, 19, 26, 58, 60, 55,
             14, 13, 16, 24, 40, 57, 69, 56,
             14, 17, 22, 29, 51, 87, 80, 62,
@@ -18,8 +18,8 @@ public:
             24, 35, 55, 64, 81, 104, 113, 92,
             49, 64, 78, 87, 103, 121, 120, 101,
             72, 92, 95, 98, 112, 100, 103, 99 };
-        for (int i = 0; i<N; i++){
-            for (int j = 0; j<N; j++){
+        for (int i = 0; i<Image_N; i++){
+            for (int j = 0; j<Image_N; j++){
                 Q[i][j] = x[i][j];
             }
         }
@@ -69,7 +69,7 @@ struct StringMap{
 //网上找到一个fantasy 的博客http://menmory.blog.163.com/blog/static/12690012620114535032530/ 这里面有比较详细的亮度AC码表等 
 class StringMapList{
 public:
-    StringMap stringMap[N*N];
+    StringMap stringMap[Image_N*Image_N];
     int partNum;	//该亮度AC码表中的条数 
     StringMapList(){
         //部分常用亮度AC码表
@@ -96,14 +96,14 @@ public:
 
 extern BrightnessQuantizedValueTable brightnessQuantizedValueTable;//定义一个亮度量化值表
 extern BrightnessDC_DifferenceTableList brightnessDC_DifferenceTableList;//定义一个亮度DC差值码表
-extern AC_EntropyCoding_MiddleSymbol ac_EntropyCoding_MiddleSymbol[N*N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
-extern EntropyCoding ac_EntropyCodingStr[N*N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
+extern AC_EntropyCoding_MiddleSymbol ac_EntropyCoding_MiddleSymbol[Image_N*Image_N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
+extern EntropyCoding ac_EntropyCodingStr[Image_N*Image_N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
 extern StringMapList stringMapList;//定义一个 部分常用亮度AC码表
 
 /*DC系数编码*/
 EntropyCoding DC_EntropyCoding(int &temp, int &temp1);
 /*AC系数编码*/
-bool AC_EntropyCoding(int F_[N][N], int &index);
+bool AC_EntropyCoding(int F_[Image_N][Image_N], int &index);
 /*将一个负数的二进制串逐位取反*/
 jpeg_string_t ConvertToComplement(jpeg_string_t strTemp);
 /*将正整数二进制转换成十进制*/

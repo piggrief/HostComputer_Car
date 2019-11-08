@@ -6,9 +6,9 @@ BrightnessQuantizedValueTable brightnessQuantizedValueTable;//定义一个亮度量化值
 
 BrightnessDC_DifferenceTableList brightnessDC_DifferenceTableList;//定义一个亮度DC差值码表
 
-AC_EntropyCoding_MiddleSymbol ac_EntropyCoding_MiddleSymbol[N*N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
+AC_EntropyCoding_MiddleSymbol ac_EntropyCoding_MiddleSymbol[Image_N*Image_N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
 
-EntropyCoding ac_EntropyCodingStr[N*N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
+EntropyCoding ac_EntropyCodingStr[Image_N*Image_N];//由于用函数返回结构体数组，里面的字符串会出现一些无法处理的乱码，故定义为全局变量 
 
 StringMapList stringMapList;//定义一个 部分常用亮度AC码表
 
@@ -64,7 +64,7 @@ string TenToTwo(int temp){
     //		strTemp[len-1-k] = t;
     //	}
     //新方法 
-    char str[N*N];
+    char str[Image_N*Image_N];
     _itoa_s(temp, str, 2);
     strTemp = str;
     return strTemp;
@@ -120,20 +120,20 @@ EntropyCoding DC_EntropyCoding(int &temp, int &temp1){
 
 
 /*AC系数编码*/
-bool AC_EntropyCoding(int F_[N][N], int &index){
+bool AC_EntropyCoding(int F_[Image_N][Image_N], int &index){
     //对AC系数生成中间符号中/后的部分 
-    int SSSS[N][N];
+    int SSSS[Image_N][Image_N];
 
     //查AC系数范围表,本人通过对表找规律发现如下规律 
-    for (int i = 0; i<N; i++){
-        for (int j = 0; j<N; j++){
+    for (int i = 0; i<Image_N; i++){
+        for (int j = 0; j<Image_N; j++){
             SSSS[i][j] = AC_Difference(F_[i][j]);
         }
     }
 
     /*测试*/
-    //	for(int i=0;i<N;i++){
-    //		for(int j=0;j<N;j++){
+    //	for(int i=0;i<Image_N;i++){
+    //		for(int j=0;j<Image_N;j++){
     //			cout<<SSSS[i][j]<<" ";
     //		}
     //		cout<<endl;
@@ -142,19 +142,19 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
     //Z字形编码
     int count = 0;//计算0的个数
     int i, j, t;
-    for (i = 0, j = 1, t = 1; t <= N - 2; t++){//以下语句设为一个周期，大概要执行N-2个周期（这里N=8，通过观察发现每一下一上为一周期，则有6个周期+半段） 
+    for (i = 0, j = 1, t = 1; t <= Image_N - 2; t++){//以下语句设为一个周期，大概要执行Image_N-2个周期（这里Image_N=8，通过观察发现每一下一上为一周期，则有6个周期+半段） 
         //向左下方向 
-        for (; i<N&&j >= 0; i++, j--){
+        for (; i<Image_N&&j >= 0; i++, j--){
             if (F_[i][j] == 0){
                 count++;
             }
             else{
-                char countString[N*N];
+                char countString[Image_N*Image_N];
                 _itoa_s(count, countString, 10);//将整数count转换为字符串并保存在countString（以10进制方式，也可指定2、8、10、16等进制实现进制转换，进制转换新玩法） 
                 string strTemp = "/";
                 strTemp = countString + strTemp;
                 //cout<<"--"<<strTemp<<"--"<<endl;
-                char SSSS_String[N*N];
+                char SSSS_String[Image_N*Image_N];
                 _itoa_s(SSSS[i][j], SSSS_String, 10);
                 strTemp = strTemp + SSSS_String;
                 //cout<<"**"<<strTemp<<"**"<<endl;
@@ -166,11 +166,11 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
                 count = 0;//置为0 ，计算下个不为0的数前面0的个数 
             }
         }
-        if (i >= N&&j<0){//当出现正中间往下时，挪回正规 
+        if (i >= Image_N&&j<0){//当出现正中间往下时，挪回正规 
             i--;
             j = j + 2;
         }
-        else if (i >= N){//当出现往下突出时，挪回正规 
+        else if (i >= Image_N){//当出现往下突出时，挪回正规 
             i--;
             j = j + 2;
         }
@@ -179,17 +179,17 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
         }
 
         //向右上方向 
-        for (; i >= 0 && j<N; i--, j++){
+        for (; i >= 0 && j<Image_N; i--, j++){
             if (F_[i][j] == 0){
                 count++;
             }
             else{
-                char countString[N*N];
+                char countString[Image_N*Image_N];
                 _itoa_s(count, countString, 10);
                 string strTemp = "/";
                 strTemp = countString + strTemp;
                 //cout<<"--"<<strTemp<<"--"<<endl;
-                char SSSS_String[N*N];
+                char SSSS_String[Image_N*Image_N];
                 _itoa_s(SSSS[i][j], SSSS_String, 10);
                 strTemp = strTemp + SSSS_String;
                 //cout<<"**"<<strTemp<<"**"<<endl;
@@ -201,14 +201,14 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
                 count = 0;//置为0 ，计算下个不为0的数前面0的个数
             }
         }
-        if (i<0 && j >= N){//当出现正中间往上时，挪回正规 
+        if (i<0 && j >= Image_N){//当出现正中间往上时，挪回正规 
             j--;
             i = i + 2;
         }
         else if (i<0){//当出现往上突出时，挪回正规 
             i++;
         }
-        else if (j >= N){//当出现往右突出时，挪回正规 
+        else if (j >= Image_N){//当出现往右突出时，挪回正规 
             j--;
             i = i + 2;
         }
@@ -216,17 +216,17 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
 
     //剩下半个周期的编码 
     //向左下方向 
-    for (; i<N&&j >= 0; i++, j--){
+    for (; i<Image_N&&j >= 0; i++, j--){
         if (F_[i][j] == 0){
             count++;
         }
         else{
-            char countString[N*N];
+            char countString[Image_N*Image_N];
             _itoa_s(count, countString, 10);
             string strTemp = "/";
             strTemp = countString + strTemp;
             //cout<<"--"<<strTemp<<"--"<<endl;
-            char SSSS_String[N*N];
+            char SSSS_String[Image_N*Image_N];
             _itoa_s(SSSS[i][j], SSSS_String, 10);
             strTemp = strTemp + SSSS_String;
             //cout<<"**"<<strTemp<<"**"<<endl;
@@ -238,7 +238,7 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
             count = 0;//置为0 ，计算下个不为0的数前面0的个数
         }
     }
-    if (i >= N){//当出现往下突出时，挪回正规
+    if (i >= Image_N){//当出现往下突出时，挪回正规
         i--;
         j = j + 2;
     }
@@ -249,12 +249,12 @@ bool AC_EntropyCoding(int F_[N][N], int &index){
         index++;
     }
     else{
-        char countString[N*N];
+        char countString[Image_N*Image_N];
         _itoa_s(count, countString, 10);
         string strTemp = "/";
         strTemp = countString + strTemp;
         //cout<<"--"<<strTemp<<"--"<<endl;
-        char SSSS_String[N*N];
+        char SSSS_String[Image_N*Image_N];
         _itoa_s(SSSS[i][j], SSSS_String, 10);
         strTemp = strTemp + SSSS_String;
         //cout<<"**"<<strTemp<<"**"<<endl;
