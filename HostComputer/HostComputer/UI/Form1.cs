@@ -723,7 +723,9 @@ namespace HostComputer
                                     break;
                             }
                             ScopeChart.Series[i].Points.AddXY(VO.TimeCount, DataBuff);
-                            VO.ShowAreaConfigList[0].ConfigShowArea(0, 20, -100, 100);
+                            ulong t_Max = VO.TimeCount > 15 ? VO.TimeCount : 15;
+                            ulong t_Min = VO.TimeCount >= 15 ? VO.TimeCount - 15 : 0;
+                            VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, 0, 100);
 			            }
                         VO.TimeCount++;
                         //float BitConverter.ToSingle(new byte[],)

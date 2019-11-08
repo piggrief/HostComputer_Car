@@ -169,7 +169,7 @@ namespace PigCommunication
                     # region 检测相应功能的参数信息
                     int ParaIndex = FunctionIndex + 1;
                     if (!FunctionParaLenghtDic.ContainsKey(FTBuff))
-                    { NowDecodingStatus = DecodingStatus.Decoded; continue; }
+                    { DecodingExecptionDeal(ParaIndex); continue; }
                     if (ParaIndex + FunctionParaLenghtDic[FTBuff] > ReveiceData.Count)
                     { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                     switch (NowDecodingFunction)
@@ -200,7 +200,7 @@ namespace PigCommunication
                             ParaList.Add(DataType);
                             DataType_t DataTypeBuff = (DataType_t)(DataType);
                             if (!DataTypeSizeDic.ContainsKey(DataTypeBuff))
-                            { NowDecodingStatus = DecodingStatus.Decoded; continue; }
+                            { DecodingExecptionDeal(ParaIndex + 2); continue; }
                             DataBagLength = DataChannelNum * DataTypeSizeDic[DataTypeBuff];
                             break;
                         default:
