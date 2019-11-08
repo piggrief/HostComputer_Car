@@ -199,6 +199,8 @@ namespace PigCommunication
                             ParaList.Add(DataChannelNum);
                             ParaList.Add(DataType);
                             DataType_t DataTypeBuff = (DataType_t)(DataType);
+                            if (!DataTypeSizeDic.ContainsKey(DataTypeBuff))
+                            { NowDecodingStatus = DecodingStatus.Decoded; continue; }
                             DataBagLength = DataChannelNum * DataTypeSizeDic[DataTypeBuff];
                             break;
                         default:
@@ -281,6 +283,15 @@ namespace PigCommunication
             //Console.WriteLine("现在的数据包：");
             //PrintByteStrWithByteArr(DataBag);
             # endregion
+        }
+        /// <summary>
+        /// 解包过程中的异常处理
+        /// </summary>
+        /// <param name="RemoveEndIndex">删除到RemoveEndIndex索引位置</param>
+        private void DecodingExecptionDeal(int RemoveEndIndex)
+        {
+            ReceivedBuff.RemoveRange(0, RemoveEndIndex);
+            NowDecodingStatus = DecodingStatus.Decoded;
         }
         /// <summary>
         /// 将Byte数组转换成Byte字符串

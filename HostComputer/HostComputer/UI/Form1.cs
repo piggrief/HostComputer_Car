@@ -18,6 +18,7 @@ using ImageDeal_Pig;
 using HostComputer.UI;
 using UartComunication;
 using PigCommunication;
+using VirtualOscilloscope_n;
 
 using AForge;
 using AForge.Imaging;
@@ -78,6 +79,10 @@ namespace HostComputer
         /// </summary>
         Thread ImageDealThread;
         /// <summary>
+        /// 虚拟示波器刷新线程
+        /// </summary>
+        Thread ScopeRenewThread;
+        /// <summary>
         /// InitalImagePB的互斥锁对象
         /// </summary>
         public static readonly object Lock_InitalImagePB = new object();
@@ -93,6 +98,11 @@ namespace HostComputer
         /// 图像处理标志，用于控制时序
         /// </summary>
         bool Flag_ImageDeal = false;
+        /// <summary>
+        /// 虚拟示波器对象
+        /// </summary>
+        VirtualOscilloscope VO;
+
         public HostComputerForm()
         {
             InitializeComponent();
@@ -170,6 +180,8 @@ namespace HostComputer
 
             skinTabControl1.SelectedIndex = 0;
 
+            VO = new VirtualOscilloscope(ScopeChart);
+
             if (Debugger.IsAttached)
                 AllocConsole();
             UartDataDecoding = new Thread(UsedUARTCommunication.DataDecoding);
@@ -177,6 +189,7 @@ namespace HostComputer
 
             ImageRefresh = new Thread(ImageRenew);
             ImageDealThread = new Thread(ImageDeal);
+            ScopeRenewThread = new Thread(ScopeDataRenew);
         }
         /// <summary>
         /// 打开串口配置界面
@@ -592,21 +605,32 @@ namespace HostComputer
                 }
                 else
                     ImageRefresh.Resume();
+
+                if (ScopeRenewThread != null && ScopeRenewThread.ThreadState != System.Threading.ThreadState.Unstarted)
+                    ScopeRenewThread.Suspend();
+            }
+            else if (skinTabControl1.SelectedTab == ScopeTabPage)
+            {
+                if (ScopeRenewThread.ThreadState == System.Threading.ThreadState.Unstarted)
+                {
+                    ScopeRenewThread = new Thread(ScopeDataRenew);
+                    ScopeRenewThread.Start();
+                }
+                else
+                    ScopeRenewThread.Resume();
+                if (ImageRefresh != null && ImageRefresh.ThreadState != System.Threading.ThreadState.Unstarted)
+                    ImageRefresh.Suspend();
+                if (ImageDealThread != null && ImageDealThread.ThreadState != System.Threading.ThreadState.Unstarted)
+                    ImageDealThread.Suspend();
             }
             else
             {
                 if (ImageRefresh != null && ImageRefresh.ThreadState != System.Threading.ThreadState.Unstarted)
-                {
                     ImageRefresh.Suspend();
-                    //ImageRefresh.Abort();
-                    //ImageRefresh.Join();                    
-                }
                 if (ImageDealThread != null && ImageDealThread.ThreadState != System.Threading.ThreadState.Unstarted)
-                {
                     ImageDealThread.Suspend();
-                    //ImageDealThread.Abort();
-                    //ImageDealThread.Join();                    
-                }
+                if (ScopeRenewThread != null && ScopeRenewThread.ThreadState != System.Threading.ThreadState.Unstarted)
+                    ScopeRenewThread.Suspend();
             }
         }
         /// <summary>
@@ -617,6 +641,8 @@ namespace HostComputer
             Console.WriteLine("ImageRenew线程开启");
             while (true)
             {
+                if (UsedUARTCommunication.NowDecodingFunction != FunctionType.CameraSend)
+                    continue;
                 bool IfRefresh = false;
 
                 try
@@ -642,7 +668,7 @@ namespace HostComputer
                         Monitor.Enter(Lock_InitalImagePB);
                         InitalImagePB.Image = BTBuff;                            
                         Monitor.Exit(Lock_InitalImagePB);
-                        
+                        UsedUARTCommunication.DataBag.Clear();
                         UsedUARTCommunication.DataBagReadFinish = false;
                         Flag_ImageDeal = true;
                         IfRefresh = true;
@@ -660,7 +686,57 @@ namespace HostComputer
                 }
             }
         }
+        /// <summary>
+        /// 虚拟示波器Chart数据更新线程函数
+        /// </summary>
+        public void ScopeDataRenew()
+        {
+            Console.WriteLine("ScopeDataRenew线程开启");
+            while (true)
+            {
+                if (UsedUARTCommunication.NowDecodingFunction != FunctionType.Oscilloscope)
+                    continue;
+                try
+                {
+                    UsedUARTCommunication.RWLock_DataBag.EnterReadLock();
+                    if (UsedUARTCommunication.DataBag.Count == UsedUARTCommunication.DataBagLength && 
+                        UsedUARTCommunication.DataBag.Count > 0)
+                    {
+                        int DataChannelNum = UsedUARTCommunication.ParaList[0];
+                        DataType_t DataType = (DataType_t)(UsedUARTCommunication.ParaList[1]);
 
+                        if (!UsedUARTCommunication.DataTypeSizeDic.ContainsKey(DataType))
+                            throw(new Exception());
+
+                        int DataSize = UsedUARTCommunication.DataTypeSizeDic[DataType];
+                        
+                        for (int i = 0, index = 0; i < DataChannelNum; i++, index += DataSize)
+			            {
+                            double DataBuff = 0;
+                            switch (DataType)
+                            {
+                                case DataType_t.float_dt:
+                                    DataBuff = BitConverter.ToSingle(
+                                        UsedUARTCommunication.DataBag.ToArray(), index);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            ScopeChart.Series[i].Points.AddXY(VO.TimeCount, DataBuff);
+                            VO.ShowAreaConfigList[0].ConfigShowArea(0, 20, -100, 100);
+			            }
+                        VO.TimeCount++;
+                        //float BitConverter.ToSingle(new byte[],)
+                        UsedUARTCommunication.DataBag.Clear();
+                        UsedUARTCommunication.DataBagReadFinish = false;
+                    }
+                }
+                finally
+                {
+                    UsedUARTCommunication.RWLock_DataBag.ExitReadLock();
+                }
+            }
+        }
         private void ScopeChart_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
