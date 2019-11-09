@@ -20,9 +20,9 @@ using UartComunication;
 using PigCommunication;
 using VirtualOscilloscope_n;
 
-using AForge;
-using AForge.Imaging;
-using AForge.Math.Geometry;
+//using AForge;
+//using AForge.Imaging;
+//using AForge.Math.Geometry;
 
 namespace HostComputer
 {
@@ -190,6 +190,39 @@ namespace HostComputer
             ImageRefresh = new Thread(ImageRenew);
             ImageDealThread = new Thread(ImageDeal);
             ScopeRenewThread = new Thread(ScopeDataRenew);
+            Random rd = new Random(0);
+            #region 生成Chart测试数据
+            for (int i = 0; i < 100; i++)
+            {
+                ScopeChart.Series[0].Points.AddXY(i, rd.Next(100));                
+            }
+            rd = new Random(5);
+            for (int i = 100; i < 1000; i++)
+            {
+                ScopeChart.Series[0].Points.AddXY(i, rd.Next(1000));
+            }
+            rd = new Random(500);
+            for (int i = 1000; i < 1100; i++)
+            {
+                ScopeChart.Series[0].Points.AddXY(i, -rd.Next(100));
+            }
+            # endregion
+            ScopeChartInit();
+        }
+        /// <summary>
+        /// 虚拟示波器图表初始化
+        /// </summary>
+        private void ScopeChartInit()
+        {
+            double t_Min = 0;
+            double t_Max = 500;
+            double d_Min = -500;
+            double d_Max = 500;
+
+            VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+
+            ScopeChart.ChartAreas[0].Axes[0].MajorGrid.LineColor = Color.Transparent;
+            ScopeChart.ChartAreas[0].Axes[1].MajorGrid.LineColor = Color.Transparent;
         }
         /// <summary>
         /// 打开串口配置界面
@@ -746,5 +779,93 @@ namespace HostComputer
                 ScopeMenuStrip.Show(MousePosition.X, MousePosition.Y);
             }
         }
+        # region ScopeChart鼠标按键逻辑
+        enum MouseStatus
+        {
+            Down,
+            Moving,
+            Up
+        }
+        MouseStatus LeftMouseStatus = MouseStatus.Up;
+        MouseStatus MiddleMouseStatus = MouseStatus.Up;
+        Point MouseLocation_Last = new Point(0, 0);
+        Point MouseLocation_This = new Point(0, 0);
+        double t_min_last = 0;
+        double t_max_last = 0;
+        double d_min_last = 0;
+        double d_max_last = 0;
+        private void ScopeChart_MouseDown(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    if (LeftMouseStatus == MouseStatus.Up)
+                        LeftMouseStatus = MouseStatus.Moving;
+                    break;
+                case MouseButtons.Middle:
+                    if (MiddleMouseStatus == MouseStatus.Up)
+                        MiddleMouseStatus = MouseStatus.Moving;
+
+                    t_min_last = VO.ShowAreaConfigList[0].Time_Min;
+                    t_max_last = VO.ShowAreaConfigList[0].Time_Max;
+                    d_min_last = VO.ShowAreaConfigList[0].Data_Min;
+                    d_max_last = VO.ShowAreaConfigList[0].Data_Max;
+                    break;
+                default:
+                    break;
+            }
+            MouseLocation_Last = e.Location;
+            MouseLocation_This = e.Location;
+        }
+
+        private void ScopeChart_MouseUp(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    if (LeftMouseStatus == MouseStatus.Moving)
+                        LeftMouseStatus = MouseStatus.Up;
+                    break;
+                case MouseButtons.Middle:
+                    if (MiddleMouseStatus == MouseStatus.Moving)
+                        MiddleMouseStatus = MouseStatus.Up;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ScopeChart_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != System.Windows.Forms.MouseButtons.Left &&
+                e.Button != System.Windows.Forms.MouseButtons.Middle)
+                return;
+            
+            MouseLocation_This = e.Location;
+            int x_diff = MouseLocation_This.X - MouseLocation_Last.X;
+            int y_diff = MouseLocation_This.Y - MouseLocation_Last.Y;
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)//左键拖动平移
+            {
+                VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
+                MouseLocation_Last = MouseLocation_This;
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+            {
+                VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
+                double x_changerate = 0.01;
+                double y_changerate = 0.01;
+
+                double x_ChangedValue = 1 + Convert.ToDouble(y_diff) * x_changerate;
+                double y_ChangedValue = 1 + Convert.ToDouble(y_diff) * y_changerate;
+
+                double t_Min = x_ChangedValue * t_min_last;
+                double t_Max = x_ChangedValue * t_max_last;
+                double d_Min = y_ChangedValue * d_min_last;
+                double d_Max = y_ChangedValue * d_max_last;
+
+                VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+            }
+        }
+        #endregion
     }
 }
