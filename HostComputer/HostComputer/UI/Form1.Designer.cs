@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostComputerForm));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.skinMenuStrip1 = new CCWin.SkinControl.SkinMenuStrip();
             this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UARTConfigMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -81,7 +81,12 @@
             this.ScopeChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.ParaSetTabPage = new CCWin.SkinControl.SkinTabPage();
             this.ScopeMenuStrip = new CCWin.SkinControl.SkinContextMenuStrip();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ZoomFitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ZoomOutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ZoomInMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.AreaZoomOutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TestBtn2 = new CCWin.SkinControl.SkinButton();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.skinMenuStrip1.SuspendLayout();
             this.skinToolStrip1.SuspendLayout();
             this.skinTabControl1.SuspendLayout();
@@ -861,6 +866,8 @@
             // ScopeTabPage
             // 
             this.ScopeTabPage.BackColor = System.Drawing.Color.White;
+            this.ScopeTabPage.Controls.Add(this.panel1);
+            this.ScopeTabPage.Controls.Add(this.TestBtn2);
             this.ScopeTabPage.Controls.Add(this.ScopeChart);
             this.ScopeTabPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ScopeTabPage.Location = new System.Drawing.Point(0, 36);
@@ -872,37 +879,39 @@
             // 
             // ScopeChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.ScopeChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.ScopeChart.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.ScopeChart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.ScopeChart.Legends.Add(legend2);
             this.ScopeChart.Location = new System.Drawing.Point(0, 0);
             this.ScopeChart.Name = "ScopeChart";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series2.Legend = "Legend1";
-            series2.Name = "Series2";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series3.Legend = "Legend1";
-            series3.Name = "Series3";
-            series4.ChartArea = "ChartArea1";
-            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series4.Legend = "Legend1";
-            series4.Name = "Series4";
-            this.ScopeChart.Series.Add(series1);
-            this.ScopeChart.Series.Add(series2);
-            this.ScopeChart.Series.Add(series3);
-            this.ScopeChart.Series.Add(series4);
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series5.Legend = "Legend1";
+            series5.Name = "Series1";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series6.Legend = "Legend1";
+            series6.Name = "Series2";
+            series7.ChartArea = "ChartArea1";
+            series7.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series7.Legend = "Legend1";
+            series7.Name = "Series3";
+            series8.ChartArea = "ChartArea1";
+            series8.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series8.Legend = "Legend1";
+            series8.Name = "Series4";
+            this.ScopeChart.Series.Add(series5);
+            this.ScopeChart.Series.Add(series6);
+            this.ScopeChart.Series.Add(series7);
+            this.ScopeChart.Series.Add(series8);
             this.ScopeChart.Size = new System.Drawing.Size(1005, 448);
             this.ScopeChart.TabIndex = 0;
             this.ScopeChart.Text = "chart1";
             this.ScopeChart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ScopeChart_MouseClick);
             this.ScopeChart.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScopeChart_MouseDown);
+            this.ScopeChart.MouseEnter += new System.EventHandler(this.ScopeChart_MouseEnter);
+            this.ScopeChart.MouseLeave += new System.EventHandler(this.ScopeChart_MouseLeave);
             this.ScopeChart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ScopeChart_MouseMove);
             this.ScopeChart.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScopeChart_MouseUp);
             // 
@@ -935,22 +944,65 @@
             this.ScopeMenuStrip.ItemRadius = 4;
             this.ScopeMenuStrip.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             this.ScopeMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1});
+            this.ZoomFitMenuItem,
+            this.ZoomOutMenuItem,
+            this.ZoomInMenuItem,
+            this.AreaZoomOutMenuItem});
             this.ScopeMenuStrip.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.ScopeMenuStrip.Name = "ScopeMenuStrip";
             this.ScopeMenuStrip.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.ScopeMenuStrip.Size = new System.Drawing.Size(154, 28);
+            this.ScopeMenuStrip.Size = new System.Drawing.Size(169, 100);
             this.ScopeMenuStrip.SkinAllColor = true;
             this.ScopeMenuStrip.TitleAnamorphosis = true;
             this.ScopeMenuStrip.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
             this.ScopeMenuStrip.TitleRadius = 4;
             this.ScopeMenuStrip.TitleRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             // 
-            // toolStripMenuItem1
+            // ZoomFitMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 24);
-            this.toolStripMenuItem1.Text = "缩放至适合";
+            this.ZoomFitMenuItem.Name = "ZoomFitMenuItem";
+            this.ZoomFitMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.ZoomFitMenuItem.Text = "缩放至适合";
+            // 
+            // ZoomOutMenuItem
+            // 
+            this.ZoomOutMenuItem.Name = "ZoomOutMenuItem";
+            this.ZoomOutMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.ZoomOutMenuItem.Text = "放大一倍";
+            // 
+            // ZoomInMenuItem
+            // 
+            this.ZoomInMenuItem.Name = "ZoomInMenuItem";
+            this.ZoomInMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.ZoomInMenuItem.Text = "缩小一倍";
+            // 
+            // AreaZoomOutMenuItem
+            // 
+            this.AreaZoomOutMenuItem.Name = "AreaZoomOutMenuItem";
+            this.AreaZoomOutMenuItem.Size = new System.Drawing.Size(168, 24);
+            this.AreaZoomOutMenuItem.Text = "指定区域放大";
+            // 
+            // TestBtn2
+            // 
+            this.TestBtn2.BackColor = System.Drawing.Color.Transparent;
+            this.TestBtn2.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.TestBtn2.DownBack = null;
+            this.TestBtn2.Location = new System.Drawing.Point(472, 510);
+            this.TestBtn2.MouseBack = null;
+            this.TestBtn2.Name = "TestBtn2";
+            this.TestBtn2.NormlBack = null;
+            this.TestBtn2.Size = new System.Drawing.Size(184, 55);
+            this.TestBtn2.TabIndex = 1;
+            this.TestBtn2.Text = "Test";
+            this.TestBtn2.UseVisualStyleBackColor = false;
+            this.TestBtn2.Click += new System.EventHandler(this.TestBtn2_Click_1);
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(788, 316);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(200, 100);
+            this.panel1.TabIndex = 2;
             // 
             // HostComputerForm
             // 
@@ -1041,7 +1093,12 @@
         private CCWin.SkinControl.SkinTabPage ScopeTabPage;
         private System.Windows.Forms.DataVisualization.Charting.Chart ScopeChart;
         private CCWin.SkinControl.SkinContextMenuStrip ScopeMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ZoomFitMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ZoomOutMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ZoomInMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem AreaZoomOutMenuItem;
+        private CCWin.SkinControl.SkinButton TestBtn2;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

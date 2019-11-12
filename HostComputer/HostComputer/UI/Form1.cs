@@ -83,6 +83,15 @@ namespace HostComputer
         /// </summary>
         Thread ScopeRenewThread;
         /// <summary>
+        /// 示波器数据列表
+        /// </summary>
+        List<List<double>> ScopeDataList = new List<List<double>>();
+        /// <summary>
+        /// ScopeDataList的读写锁对象
+        /// </summary>
+        ReaderWriterLockSlim RWLock_ScopeDataList = new ReaderWriterLockSlim();
+
+        /// <summary>
         /// InitalImagePB的互斥锁对象
         /// </summary>
         public static readonly object Lock_InitalImagePB = new object();
@@ -190,24 +199,41 @@ namespace HostComputer
             ImageRefresh = new Thread(ImageRenew);
             ImageDealThread = new Thread(ImageDeal);
             ScopeRenewThread = new Thread(ScopeDataRenew);
+
+            #region 一些变量初始化
+            for (int i = 0; i < 4; i++)
+                ScopeDataList.Add(new List<double>());
+            #endregion
+
+            int random_num = 0;
             Random rd = new Random(0);
             #region 生成Chart测试数据
             for (int i = 0; i < 100; i++)
-            {
-                ScopeChart.Series[0].Points.AddXY(i, rd.Next(100));                
+            {               
+                random_num = rd.Next(100);
+                ScopeChart.Series[0].Points.AddXY(i, random_num);
+                ScopeDataList[0].Add(random_num);
+                VO.TimeCount++;
             }
             rd = new Random(5);
             for (int i = 100; i < 1000; i++)
             {
-                ScopeChart.Series[0].Points.AddXY(i, rd.Next(1000));
+                random_num = rd.Next(1000);
+                ScopeChart.Series[0].Points.AddXY(i, random_num);
+                ScopeDataList[0].Add(random_num);
+                VO.TimeCount++;
             }
             rd = new Random(500);
             for (int i = 1000; i < 1100; i++)
             {
-                ScopeChart.Series[0].Points.AddXY(i, -rd.Next(100));
+                random_num = -rd.Next(100);
+                ScopeChart.Series[0].Points.AddXY(i, random_num);
+                ScopeDataList[0].Add(random_num);
+                VO.TimeCount++;
             }
             # endregion
-            ScopeChartInit();
+            BindScopeMenu();
+            ScopeChartInit();       
         }
         /// <summary>
         /// 虚拟示波器图表初始化
@@ -224,6 +250,70 @@ namespace HostComputer
             ScopeChart.ChartAreas[0].Axes[0].MajorGrid.LineColor = Color.Transparent;
             ScopeChart.ChartAreas[0].Axes[1].MajorGrid.LineColor = Color.Transparent;
         }
+        /// <summary>
+        /// 绑定右键菜单
+        /// </summary>
+        private void BindScopeMenu()
+        {
+            ZoomFitMenuItem.Click += new EventHandler(ZoomFitMenuItem_Click);
+            ZoomOutMenuItem.Click += new EventHandler(ZoomOutMenuItem_Click);
+            ZoomInMenuItem.Click += new EventHandler(ZoomInMenuItem_Click);
+            AreaZoomOutMenuItem.Click += new EventHandler(AreaZoomOutMenuItem_Click);
+        }
+        /// <summary>
+        /// 缩放至合适点击事件
+        /// </summary>
+        private void ZoomFitMenuItem_Click(object sender, EventArgs e)
+        {
+            double DataMaxValue = 0, DataMinValue = 0;
+            try
+            {
+                RWLock_ScopeDataList.EnterReadLock();
+                for (int i = 0; i < ScopeDataList.Count; i++)
+                {
+                    if (ScopeDataList[i].Count > 0)
+                    {
+                        double MaxBuff = ScopeDataList[i].Max();
+                        double MinBuff = ScopeDataList[i].Min();
+
+                        DataMaxValue = MaxBuff > DataMaxValue ? MaxBuff : DataMaxValue;
+                        DataMinValue = MinBuff < DataMinValue ? MinBuff : DataMinValue;                        
+                    }
+                }
+            }
+            finally
+            {
+                RWLock_ScopeDataList.ExitReadLock();
+            }
+
+            VO.ShowAreaConfigList[0].ConfigShowArea(0, VO.TimeCount, DataMinValue, DataMaxValue);
+        }
+        /// <summary>
+        /// 放大一倍点击事件
+        /// </summary>
+        private void ZoomOutMenuItem_Click(object sender, EventArgs e)
+        {
+            VO.ShowAreaConfigList[0].ScaleChange(2);
+        }
+
+        /// <summary>
+        /// 缩小一倍点击事件
+        /// </summary>
+        private void ZoomInMenuItem_Click(object sender, EventArgs e)
+        {
+            VO.ShowAreaConfigList[0].ScaleChange(0.5);
+        }
+        /// <summary>
+        /// 选择区域放大点击事件
+        /// </summary>
+        private void AreaZoomOutMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
+                MouseMovingTask = LeftMouseMovingTask.Pan;  
+            else if (MouseMovingTask == LeftMouseMovingTask.Pan)
+                MouseMovingTask = LeftMouseMovingTask.SelectArea;
+        }
+
         /// <summary>
         /// 打开串口配置界面
         /// </summary>
@@ -756,9 +846,18 @@ namespace HostComputer
                                     break;
                             }
                             ScopeChart.Series[i].Points.AddXY(VO.TimeCount, DataBuff);
-                            ulong t_Max = VO.TimeCount > 15 ? VO.TimeCount : 15;
-                            ulong t_Min = VO.TimeCount >= 15 ? VO.TimeCount - 15 : 0;
-                            VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, 0, 100);
+                            try
+                            {
+                                RWLock_ScopeDataList.EnterWriteLock();
+                                ScopeDataList[i].Add(DataBuff);
+                            }
+                            finally
+                            {
+                                RWLock_ScopeDataList.ExitWriteLock();
+                            }
+                            //ulong t_Max = VO.TimeCount > 15 ? VO.TimeCount : 15;
+                            //ulong t_Min = VO.TimeCount >= 15 ? VO.TimeCount - 15 : 0;
+                            //VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, 0, 100);
 			            }
                         VO.TimeCount++;
                         //float BitConverter.ToSingle(new byte[],)
@@ -780,6 +879,12 @@ namespace HostComputer
             }
         }
         # region ScopeChart鼠标按键逻辑
+        enum LeftMouseMovingTask
+        {
+            Pan,
+            SelectArea
+        }
+        LeftMouseMovingTask MouseMovingTask = LeftMouseMovingTask.Pan;
         enum MouseStatus
         {
             Down,
@@ -794,6 +899,7 @@ namespace HostComputer
         double t_max_last = 0;
         double d_min_last = 0;
         double d_max_last = 0;
+        Rectangle MouseRect = Rectangle.Empty;
         private void ScopeChart_MouseDown(object sender, MouseEventArgs e)
         {
             switch (e.Button)
@@ -816,6 +922,12 @@ namespace HostComputer
             }
             MouseLocation_Last = e.Location;
             MouseLocation_This = e.Location;
+
+            if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
+            {
+                DrawMouseRectangleStart(ScopeChart.PointToScreen(e.Location));
+            }
+
         }
 
         private void ScopeChart_MouseUp(object sender, MouseEventArgs e)
@@ -833,6 +945,13 @@ namespace HostComputer
                 default:
                     break;
             }
+            if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
+            {
+                Bitmap i = new Bitmap(ScopeChart.Size.Width, ScopeChart.Size.Height);
+                ScopeChartGraphics = Graphics.FromImage(i);
+                ScopeChartGraphics.Clear(Color.Transparent);
+                ScopeChartGraphics.Dispose();
+            }
         }
 
         private void ScopeChart_MouseMove(object sender, MouseEventArgs e)
@@ -842,30 +961,116 @@ namespace HostComputer
                 return;
             
             MouseLocation_This = e.Location;
-            int x_diff = MouseLocation_This.X - MouseLocation_Last.X;
-            int y_diff = MouseLocation_This.Y - MouseLocation_Last.Y;
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)//左键拖动平移
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && 
+                MouseMovingTask == LeftMouseMovingTask.SelectArea)
             {
-                VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
-                MouseLocation_Last = MouseLocation_This;
+                DrawR(MouseLocation_Last, MouseLocation_This);
             }
-            else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
-            {
-                VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
-                double x_changerate = 0.01;
-                double y_changerate = 0.01;
+            else
+            {           
+                int x_diff = MouseLocation_This.X - MouseLocation_Last.X;
+                int y_diff = MouseLocation_This.Y - MouseLocation_Last.Y;
+                if (e.Button == System.Windows.Forms.MouseButtons.Left)//左键拖动平移
+                {
+                    VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
+                    MouseLocation_Last = MouseLocation_This;
+                }
+                else if (e.Button == System.Windows.Forms.MouseButtons.Middle)
+                {
+                    VO.ShowAreaConfigList[0].PanChange(x_diff, y_diff, ScopeChart.Size);
+                    double x_changerate = 0.01;
+                    double y_changerate = 0.01;
 
-                double x_ChangedValue = 1 + Convert.ToDouble(y_diff) * x_changerate;
-                double y_ChangedValue = 1 + Convert.ToDouble(y_diff) * y_changerate;
+                    double x_ChangedValue = 1 + Convert.ToDouble(y_diff) * x_changerate;
+                    double y_ChangedValue = 1 + Convert.ToDouble(y_diff) * y_changerate;
 
-                double t_Min = x_ChangedValue * t_min_last;
-                double t_Max = x_ChangedValue * t_max_last;
-                double d_Min = y_ChangedValue * d_min_last;
-                double d_Max = y_ChangedValue * d_max_last;
+                    double t_Min = x_ChangedValue * t_min_last;
+                    double t_Max = x_ChangedValue * t_max_last;
+                    double d_Min = y_ChangedValue * d_min_last;
+                    double d_Max = y_ChangedValue * d_max_last;
 
-                VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+                    VO.ShowAreaConfigList[0].ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+                }
             }
         }
+
+        /// <summary>
+        /// 鼠标进入控件事件，主要用于改变鼠标形状
+        /// </summary>
+        private void ScopeChart_MouseEnter(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Hand;
+        }
+        /// <summary>
+        /// 鼠标离开控件事件，主要用于恢复鼠标形状
+        /// </summary>
+        private void ScopeChart_MouseLeave(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Default;
+        }
         #endregion
+        /// <summary>
+        /// 画鼠标拖动框开始
+        /// </summary>
+        /// <param name="StartPoint">开始坐标</param>
+        void DrawMouseRectangleStart(Point StartPoint)
+        {
+            ScopeChart.Capture = true;
+            Cursor.Clip = ScopeChart.RectangleToScreen(new Rectangle(0, 0, ClientSize.Width, ClientSize.Height));
+            MouseRect = new Rectangle(StartPoint.X, StartPoint.Y, 0, 0);
+        }
+        /// <summary>
+        /// 画矩形
+        /// </summary>
+        private void DrawRectangle()
+        {
+            Rectangle rect = this.RectangleToScreen(MouseRect);
+            ControlPaint.DrawReversibleFrame(rect, Color.White, FrameStyle.Dashed);
+        } 
+        /// <summary>
+        /// 重塑矩形
+        /// </summary>
+        /// <param name="p">当前鼠标位置</param>
+        private void ResizeToRectangle(Point p)
+        {
+            DrawRectangle();
+            MouseRect.Width = p.X - MouseRect.Left;
+            MouseRect.Height = p.Y - MouseRect.Top;
+            DrawRectangle();
+        }
+        Graphics ScopeChartGraphics;
+        void DrawR(Point basepoint, Point e)
+        {
+
+            Bitmap i = new Bitmap(skinTabControl1.Size.Width, skinTabControl1.Size.Height);
+            ScopeChartGraphics = Graphics.FromImage(i);            
+            //创建画笔
+            Pen p = new Pen(Color.Red, 2.0f);
+            //指定线条的样式为划线段
+            p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+            //根据当前位置画图，使用math的abs()方法求绝对值
+            if (e.X < basepoint.X && e.Y < basepoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, e.X, e.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+            else if (e.X > basepoint.X && e.Y < basepoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, basepoint.X, e.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+            else if (e.X < basepoint.X && e.Y > basepoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, e.X, basepoint.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+            else
+                ScopeChartGraphics.DrawRectangle(p, basepoint.X, basepoint.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+            //将位图贴到窗口上
+            skinTabControl1.BackgroundImage = i;
+            //释放gid和pen资源
+            ScopeChartGraphics.Dispose();
+            p.Dispose();
+        }
+        private void TestBtn2_Click_1(object sender, EventArgs e)
+        {
+            //MouseRect = new Rectangle(0, 0, 200, 200);
+            //Rectangle rect = this.RectangleToScreen(MouseRect);
+            //ControlPaint.DrawReversibleFrame(rect, Color.Red, FrameStyle.Dashed);
+            DrawR(new Point(skinTabControl1.Location.X, skinTabControl1.Location.Y + skinTabControl1.ItemSize.Width)
+                , new Point(200, 200));
+        }  
     }
 }

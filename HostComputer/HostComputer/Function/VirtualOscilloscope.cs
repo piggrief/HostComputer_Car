@@ -72,6 +72,19 @@ namespace VirtualOscilloscope_n
 
                 ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
             }
+            /// <summary>
+            /// 显示区域缩放
+            /// </summary>
+            /// <param name="Scale_Rate">缩放比例</param>
+            public void ScaleChange(double Scale_Rate)
+            {
+                double t_Min = Time_Min * Scale_Rate;
+                double t_Max = Time_Max * Scale_Rate;
+                double d_Min = Data_Min * Scale_Rate;
+                double d_Max = Data_Max * Scale_Rate;
+
+                ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+            }
         }
         public List<ShowAreaConfig> ShowAreaConfigList = new List<ShowAreaConfig>();
         public VirtualOscilloscope(System.Windows.Forms.DataVisualization.Charting.Chart ChartSet)
