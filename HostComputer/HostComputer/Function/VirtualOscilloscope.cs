@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace VirtualOscilloscope_n
@@ -38,17 +39,17 @@ namespace VirtualOscilloscope_n
             /// </summary>
             public void ConfigShowArea(double T_Min, double T_Max, double D_Min, double D_Max)
             {
-                Time_Min = T_Min;
-                Time_Max = T_Max;
-                Data_Min = D_Min;
-                Data_Max = D_Max;
+                Time_Min = Math.Round(T_Min, 1);
+                Time_Max = Math.Round(T_Max, 1);
+                Data_Min = Math.Round(D_Min, 1);
+                Data_Max = Math.Round(D_Max, 1);
 
                 ShowChart.Invoke(new EventHandler(delegate
                 {
-                    ShowChart.ChartAreas[AreaIndex].Axes[0].Maximum = T_Max;
-                    ShowChart.ChartAreas[AreaIndex].Axes[0].Minimum = T_Min;
-                    ShowChart.ChartAreas[AreaIndex].Axes[1].Maximum = D_Max;
-                    ShowChart.ChartAreas[AreaIndex].Axes[1].Minimum = D_Min;
+                    ShowChart.ChartAreas[AreaIndex].Axes[0].Maximum = Time_Max;
+                    ShowChart.ChartAreas[AreaIndex].Axes[0].Minimum = Time_Min;
+                    ShowChart.ChartAreas[AreaIndex].Axes[1].Maximum = Data_Max;
+                    ShowChart.ChartAreas[AreaIndex].Axes[1].Minimum = Data_Min;
                 }));
             }
             /// <summary>
@@ -84,6 +85,67 @@ namespace VirtualOscilloscope_n
                 double d_Max = Data_Max * Scale_Rate;
 
                 ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
+            }
+
+            public Point t_min_d_min_loaction = new Point(94, 405);
+            public const double t_max_location = 840;
+            public const double d_max_location = 23;
+            /// <summary>
+            /// 鼠标点击位置转成数据坐标
+            /// </summary>
+            /// <param name="MousePoint">鼠标点击位置</param>
+            /// <param name="If_ChangT">是否转换T坐标，否为转换D坐标</param>
+            /// <returns>对应图表上的数据点</returns>
+            public double MouseLocationToChartData(double MousePoint, bool If_ChangT)
+            {
+                double Result = 0;
+                if (If_ChangT)
+                {
+                    double k_t = (Time_Max - Time_Min) /
+                        (t_max_location - Convert.ToDouble(t_min_d_min_loaction.X));
+                    double b_t = Time_Max - t_max_location * k_t;
+                    Result = MousePoint * k_t + b_t;
+                }
+                else
+                {
+                    double k_d = (Data_Max - Data_Min) /
+                        (d_max_location - Convert.ToDouble(t_min_d_min_loaction.Y));
+                    double b_d = Data_Max - d_max_location * k_d;
+                    Result = MousePoint * k_d + b_d; 
+                }
+
+                return Result;
+            }
+            /// <summary>
+            /// 根据选择区域缩放
+            /// </summary>
+            /// <param name="StartLoaction">点击起始位置</param>
+            /// <param name="EndLocation">结束起始位置</param>
+            public void AreaScale(Point StartLoaction, Point EndLocation)
+            {
+                double new_t_min = 0, new_t_max = 0;
+                double new_d_min = 0, new_d_max = 0;
+                if (StartLoaction.X < EndLocation.X)
+                {
+                    new_t_min = MouseLocationToChartData(StartLoaction.X, true);
+                    new_t_max = MouseLocationToChartData(EndLocation.X, true);
+                }
+                else
+                {
+                    new_t_min = MouseLocationToChartData(EndLocation.X, true);
+                    new_t_max = MouseLocationToChartData(StartLoaction.X, true);
+                }
+                if (StartLoaction.Y < EndLocation.Y)
+                {
+                    new_d_min = MouseLocationToChartData(EndLocation.Y, false);
+                    new_d_max = MouseLocationToChartData(StartLoaction.Y, false);
+                }
+                else
+                {
+                    new_d_min = MouseLocationToChartData(StartLoaction.Y, false);
+                    new_d_max = MouseLocationToChartData(EndLocation.Y, false);
+                }
+                ConfigShowArea(new_t_min, new_t_max, new_d_min, new_d_max);
             }
         }
         public List<ShowAreaConfig> ShowAreaConfigList = new List<ShowAreaConfig>();

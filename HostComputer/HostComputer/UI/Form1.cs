@@ -233,7 +233,7 @@ namespace HostComputer
             }
             # endregion
             BindScopeMenu();
-            ScopeChartInit();       
+            ScopeChartInit();
         }
         /// <summary>
         /// 虚拟示波器图表初始化
@@ -249,6 +249,11 @@ namespace HostComputer
 
             ScopeChart.ChartAreas[0].Axes[0].MajorGrid.LineColor = Color.Transparent;
             ScopeChart.ChartAreas[0].Axes[1].MajorGrid.LineColor = Color.Transparent;
+
+            ScopeChart.Controls.Add(SelectDrawPanel);
+            SelectDrawPanel.BackColor = Color.Transparent;
+            SelectDrawPanel.Location = new Point(0, 0);
+            SelectDrawPanel.Size = new Size(0, 0);
         }
         /// <summary>
         /// 绑定右键菜单
@@ -308,10 +313,11 @@ namespace HostComputer
         /// </summary>
         private void AreaZoomOutMenuItem_Click(object sender, EventArgs e)
         {
-            if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
-                MouseMovingTask = LeftMouseMovingTask.Pan;  
-            else if (MouseMovingTask == LeftMouseMovingTask.Pan)
+            if (MouseMovingTask == LeftMouseMovingTask.Pan)
+            {
                 MouseMovingTask = LeftMouseMovingTask.SelectArea;
+                this.Cursor = Cursors.Cross;
+            }
         }
 
         /// <summary>
@@ -875,8 +881,18 @@ namespace HostComputer
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
+                if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
+                {
+                    MouseMovingTask = LeftMouseMovingTask.Pan;
+                    this.Cursor = Cursors.Hand;
+                    return;
+                }
                 ScopeMenuStrip.Show(MousePosition.X, MousePosition.Y);
             }
+            //if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            //{
+            //    Console.WriteLine(e.Location.X.ToString() + "," + e.Location.Y.ToString());
+            //}
         }
         # region ScopeChart鼠标按键逻辑
         enum LeftMouseMovingTask
@@ -922,12 +938,6 @@ namespace HostComputer
             }
             MouseLocation_Last = e.Location;
             MouseLocation_This = e.Location;
-
-            if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
-            {
-                DrawMouseRectangleStart(ScopeChart.PointToScreen(e.Location));
-            }
-
         }
 
         private void ScopeChart_MouseUp(object sender, MouseEventArgs e)
@@ -947,10 +957,10 @@ namespace HostComputer
             }
             if (MouseMovingTask == LeftMouseMovingTask.SelectArea)
             {
-                Bitmap i = new Bitmap(ScopeChart.Size.Width, ScopeChart.Size.Height);
-                ScopeChartGraphics = Graphics.FromImage(i);
-                ScopeChartGraphics.Clear(Color.Transparent);
-                ScopeChartGraphics.Dispose();
+                DrawAreaRectangleEnd();
+                MouseMovingTask = LeftMouseMovingTask.Pan;
+                this.Cursor = Cursors.Hand;
+                VO.ShowAreaConfigList[0].AreaScale(MouseLocation_Last, e.Location);
             }
         }
 
@@ -965,7 +975,7 @@ namespace HostComputer
             if (e.Button == System.Windows.Forms.MouseButtons.Left && 
                 MouseMovingTask == LeftMouseMovingTask.SelectArea)
             {
-                DrawR(MouseLocation_Last, MouseLocation_This);
+                DrawSelectedAreaRectangle(MouseLocation_Last, MouseLocation_This);
             }
             else
             {           
@@ -1000,7 +1010,10 @@ namespace HostComputer
         /// </summary>
         private void ScopeChart_MouseEnter(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Hand;
+            if (MouseMovingTask != LeftMouseMovingTask.SelectArea)
+            {
+                this.Cursor = Cursors.Hand;
+            }           
         }
         /// <summary>
         /// 鼠标离开控件事件，主要用于恢复鼠标形状
@@ -1010,66 +1023,60 @@ namespace HostComputer
             this.Cursor = Cursors.Default;
         }
         #endregion
-        /// <summary>
-        /// 画鼠标拖动框开始
-        /// </summary>
-        /// <param name="StartPoint">开始坐标</param>
-        void DrawMouseRectangleStart(Point StartPoint)
-        {
-            ScopeChart.Capture = true;
-            Cursor.Clip = ScopeChart.RectangleToScreen(new Rectangle(0, 0, ClientSize.Width, ClientSize.Height));
-            MouseRect = new Rectangle(StartPoint.X, StartPoint.Y, 0, 0);
-        }
-        /// <summary>
-        /// 画矩形
-        /// </summary>
-        private void DrawRectangle()
-        {
-            Rectangle rect = this.RectangleToScreen(MouseRect);
-            ControlPaint.DrawReversibleFrame(rect, Color.White, FrameStyle.Dashed);
-        } 
-        /// <summary>
-        /// 重塑矩形
-        /// </summary>
-        /// <param name="p">当前鼠标位置</param>
-        private void ResizeToRectangle(Point p)
-        {
-            DrawRectangle();
-            MouseRect.Width = p.X - MouseRect.Left;
-            MouseRect.Height = p.Y - MouseRect.Top;
-            DrawRectangle();
-        }
-        Graphics ScopeChartGraphics;
-        void DrawR(Point basepoint, Point e)
-        {
 
-            Bitmap i = new Bitmap(skinTabControl1.Size.Width, skinTabControl1.Size.Height);
-            ScopeChartGraphics = Graphics.FromImage(i);            
+        # region 绘制鼠标拖动虚线框部分程序
+        /// <summary>
+        /// ScopeChart空间GDI对象
+        /// </summary>
+        Graphics ScopeChartGraphics;
+        /// <summary>
+        /// 绘制虚线框结束
+        /// </summary>
+        void DrawAreaRectangleEnd()
+        {
+            Bitmap i = new Bitmap(ScopeChart.Size.Width, ScopeChart.Size.Height);
+            ScopeChartGraphics = Graphics.FromImage(i);
+            ScopeChartGraphics.Clear(Color.Transparent);
+            ScopeChartGraphics.Dispose();
+            SelectDrawPanel.Size = new Size(0, 0);
+        }
+        /// <summary>
+        /// 绘制选中虚线框
+        /// </summary>
+        /// <param name="StartPoint">开始点</param>
+        /// <param name="NowPoint">现在点</param>
+        void DrawSelectedAreaRectangle(Point StartPoint, Point NowPoint)
+        {
+            SelectDrawPanel.Size = ScopeChart.Size;
+            Bitmap i = new Bitmap(ScopeChart.Size.Width, ScopeChart.Size.Height);
+            ScopeChartGraphics = Graphics.FromImage(i);         
             //创建画笔
             Pen p = new Pen(Color.Red, 2.0f);
             //指定线条的样式为划线段
             p.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             //根据当前位置画图，使用math的abs()方法求绝对值
-            if (e.X < basepoint.X && e.Y < basepoint.Y)
-                ScopeChartGraphics.DrawRectangle(p, e.X, e.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
-            else if (e.X > basepoint.X && e.Y < basepoint.Y)
-                ScopeChartGraphics.DrawRectangle(p, basepoint.X, e.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
-            else if (e.X < basepoint.X && e.Y > basepoint.Y)
-                ScopeChartGraphics.DrawRectangle(p, e.X, basepoint.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+            if (NowPoint.X < StartPoint.X && NowPoint.Y < StartPoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, NowPoint.X, NowPoint.Y, System.Math.Abs(NowPoint.X - StartPoint.X), System.Math.Abs(NowPoint.Y - StartPoint.Y));
+            else if (NowPoint.X > StartPoint.X && NowPoint.Y < StartPoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, StartPoint.X, NowPoint.Y, System.Math.Abs(NowPoint.X - StartPoint.X), System.Math.Abs(NowPoint.Y - StartPoint.Y));
+            else if (NowPoint.X < StartPoint.X && NowPoint.Y > StartPoint.Y)
+                ScopeChartGraphics.DrawRectangle(p, NowPoint.X, StartPoint.Y, System.Math.Abs(NowPoint.X - StartPoint.X), System.Math.Abs(NowPoint.Y - StartPoint.Y));
             else
-                ScopeChartGraphics.DrawRectangle(p, basepoint.X, basepoint.Y, System.Math.Abs(e.X - basepoint.X), System.Math.Abs(e.Y - basepoint.Y));
+                ScopeChartGraphics.DrawRectangle(p, StartPoint.X, StartPoint.Y, System.Math.Abs(NowPoint.X - StartPoint.X), System.Math.Abs(NowPoint.Y - StartPoint.Y));
             //将位图贴到窗口上
-            skinTabControl1.BackgroundImage = i;
+            SelectDrawPanel.BackgroundImage = i;
+
             //释放gid和pen资源
             ScopeChartGraphics.Dispose();
             p.Dispose();
         }
+        # endregion
         private void TestBtn2_Click_1(object sender, EventArgs e)
         {
             //MouseRect = new Rectangle(0, 0, 200, 200);
             //Rectangle rect = this.RectangleToScreen(MouseRect);
             //ControlPaint.DrawReversibleFrame(rect, Color.Red, FrameStyle.Dashed);
-            DrawR(new Point(skinTabControl1.Location.X, skinTabControl1.Location.Y + skinTabControl1.ItemSize.Width)
+            DrawSelectedAreaRectangle(new Point(skinTabControl1.Location.X, skinTabControl1.Location.Y + skinTabControl1.ItemSize.Width)
                 , new Point(200, 200));
         }  
     }
