@@ -206,29 +206,25 @@ namespace HostComputer
             #endregion
 
             int random_num = 0;
-            Random rd = new Random(0);
+            List<Random> rdList = new List<Random>();
+            rdList.Add(new Random(12));
+            rdList.Add(new Random(20));
+            rdList.Add(new Random(40));
+            rdList.Add(new Random(80));
+            //ScopeChart.Series[1].Enabled = false;
+            //ScopeChart.Series[2].Enabled = false;
+            //ScopeChart.Series[3].Enabled = false;
+
             #region 生成Chart测试数据
             for (int i = 0; i < 100; i++)
-            {               
-                random_num = rd.Next(100);
-                ScopeChart.Series[0].Points.AddXY(i, random_num);
-                ScopeDataList[0].Add(random_num);
-                VO.TimeCount++;
-            }
-            rd = new Random(5);
-            for (int i = 100; i < 1000; i++)
-            {
-                random_num = rd.Next(1000);
-                ScopeChart.Series[0].Points.AddXY(i, random_num);
-                ScopeDataList[0].Add(random_num);
-                VO.TimeCount++;
-            }
-            rd = new Random(500);
-            for (int i = 1000; i < 1100; i++)
-            {
-                random_num = -rd.Next(100);
-                ScopeChart.Series[0].Points.AddXY(i, random_num);
-                ScopeDataList[0].Add(random_num);
+            {              
+                for (int j = 0; j < 4; j++)
+                {
+                    random_num = rdList[j].Next(100 * (j + 1));
+                    ScopeChart.Series[j].Points.AddXY(i, random_num);
+                    ScopeChart.Series[j].Points[i].ToolTip = "#VALX, #VALY";
+                    ScopeDataList[j].Add(random_num);
+                }
                 VO.TimeCount++;
             }
             # endregion
@@ -241,7 +237,7 @@ namespace HostComputer
         private void ScopeChartInit()
         {
             double t_Min = 0;
-            double t_Max = 500;
+            double t_Max = 100;
             double d_Min = -500;
             double d_Max = 500;
 
@@ -264,6 +260,7 @@ namespace HostComputer
             ZoomOutMenuItem.Click += new EventHandler(ZoomOutMenuItem_Click);
             ZoomInMenuItem.Click += new EventHandler(ZoomInMenuItem_Click);
             AreaZoomOutMenuItem.Click += new EventHandler(AreaZoomOutMenuItem_Click);
+            ScopeConfigMenuItem.Click += new EventHandler(ScopeConfigMenuItem_Click);
         }
         /// <summary>
         /// 缩放至合适点击事件
@@ -318,6 +315,16 @@ namespace HostComputer
                 MouseMovingTask = LeftMouseMovingTask.SelectArea;
                 this.Cursor = Cursors.Cross;
             }
+        }
+        /// <summary>
+        /// 示波器配置界面打开事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScopeConfigMenuItem_Click(object sender, EventArgs e)
+        {
+            ScopeConfig SC = new ScopeConfig(ScopeChart.Series.Count);
+            SC.Show();         
         }
 
         /// <summary>

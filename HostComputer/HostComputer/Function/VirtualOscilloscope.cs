@@ -44,6 +44,10 @@ namespace VirtualOscilloscope_n
                 Data_Min = Math.Round(D_Min, 1);
                 Data_Max = Math.Round(D_Max, 1);
 
+                if (Time_Max - Time_Min < 0.1 || Data_Max - Data_Min < 0.1)
+                {
+                    return;
+                }
                 ShowChart.Invoke(new EventHandler(delegate
                 {
                     ShowChart.ChartAreas[AreaIndex].Axes[0].Maximum = Time_Max;
@@ -66,10 +70,10 @@ namespace VirtualOscilloscope_n
                 Int32 x_ChangedValue = Convert.ToInt32(x_diff * x_diff_changrate);
                 Int32 y_ChangedValue = Convert.ToInt32(y_diff * y_diff_changrate);
 
-                double t_Min = x_ChangedValue + Time_Min;
-                double t_Max = x_ChangedValue + Time_Max;
-                double d_Min = -y_ChangedValue + Data_Min;
-                double d_Max = -y_ChangedValue + Data_Max;
+                double t_Min = -x_ChangedValue + Time_Min;
+                double t_Max = -x_ChangedValue + Time_Max;
+                double d_Min = y_ChangedValue + Data_Min;
+                double d_Max = y_ChangedValue + Data_Max;
 
                 ConfigShowArea(t_Min, t_Max, d_Min, d_Max);
             }
