@@ -323,10 +323,23 @@ namespace HostComputer
         /// <param name="e"></param>
         private void ScopeConfigMenuItem_Click(object sender, EventArgs e)
         {
-            ScopeConfig SC = new ScopeConfig(ScopeChart.Series.Count);
-            SC.Show();         
+            ScopeConfig SC = new ScopeConfig(ScopeChart);
+            SC.Show();
         }
 
+        public void ConfigScopeChart(ScopeConfig SC, CCWin.SkinControl.SkinDataGridView DGV)
+        {
+            ScopeChart.Invoke(new EventHandler(delegate
+            {
+                for (int i = 0; i < ScopeChart.Series.Count; i++)
+                {
+                    ScopeChart.Series[i].Color = SC.SeriesColorConfig[i];
+
+                    ScopeChart.Series[i].ChartType = (System.Windows.Forms.DataVisualization.Charting.SeriesChartType)
+                        (DGV.Rows[i].Cells[2].Value);
+                }
+            }));
+        }
         /// <summary>
         /// 打开串口配置界面
         /// </summary>
